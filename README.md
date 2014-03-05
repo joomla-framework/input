@@ -46,7 +46,7 @@ $foo = $input->get('foo');
 // If the variable is not available, use a default.
 $foo = $input->get('foo', 'bar');
 
-// Apply a custom filter to the variable, in this case, get the raw value.
+// Apply a filter to the variable, in this case, get the string value.
 $foo = $input->get('body', null, 'string');
 
 // Explicitly set an input value.
