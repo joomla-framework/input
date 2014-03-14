@@ -128,7 +128,7 @@ class InputTest extends \PHPUnit_Framework_TestCase
 			$instance->get('foo'),
 			$this->equalTo('bar'),
 			'Line: ' . __LINE__ . '.'
-		);
+		);	
 
 		$_GET['foo'] = 'bar2';
 
@@ -144,6 +144,14 @@ class InputTest extends \PHPUnit_Framework_TestCase
 			$instance->get('default_value', 'default'),
 			$this->equalTo('default'),
 			'Line: ' . __LINE__ . '.'
+		);
+
+		$_REQUEST['empty'] = '';
+
+		// Test the get method
+		$this->assertThat(
+			$instance->get('empty', 'default'),
+			$this->equalTo('default')
 		);
 	}
 
