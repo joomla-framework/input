@@ -128,7 +128,7 @@ class InputTest extends \PHPUnit_Framework_TestCase
 			$instance->get('foo'),
 			$this->equalTo('bar'),
 			'Line: ' . __LINE__ . '.'
-		);	
+		);
 
 		$_GET['foo'] = 'bar2';
 
