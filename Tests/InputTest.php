@@ -63,54 +63,6 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function test__get()
 	{
-		// Test super globals
-		$_POST['foo'] = 'bar';
-
-		// Test the get method.
-		$this->assertThat(
-			$this->instance->post->get('foo'),
-			$this->equalTo('bar'),
-			'Line: ' . __LINE__ . '.'
-		);
-
-		// Test the set method.
-		$this->instance->post->set('foo', 'notbar');
-		$this->assertThat(
-			$this->instance->post->get('foo'),
-			$this->equalTo('notbar'),
-			'Line: ' . __LINE__ . '.'
-		);
-
-		$_GET['foo'] = 'bar';
-
-		// Test the get method.
-		$this->assertThat(
-			$this->instance->get->get('foo'),
-			$this->equalTo('bar')
-		);
-
-		// Test the set method.
-		$this->instance->get->set('foo', 'notbar');
-		$this->assertThat(
-			$this->instance->get->get('foo'),
-			$this->equalTo('notbar')
-		);
-
-		// Test input class Cli
-		$this->instance->cli->set('foo', 'bar');
-		$this->assertThat(
-			$this->instance->cli->get('foo'),
-			$this->equalTo('bar')
-		);
-
-		// Test input class Json
-		$this->instance->json->set('foo', 'bar');
-		$this->assertThat(
-			$this->instance->json->get('foo'),
-			$this->equalTo('bar')
-		);
-
-		// Input classes Cookie and Files yet to be completed
 		$this->markTestIncomplete();
 	}
 
