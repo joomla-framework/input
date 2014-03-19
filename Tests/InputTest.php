@@ -168,8 +168,8 @@ class InputTest extends \PHPUnit_Framework_TestCase
 		$this->instance->set('foo', 'bar');
 
 		$this->assertThat(
-			$_REQUEST['foo'],
-			$this->equalTo('bar2'),
+			$this->instance->get('foo'),
+			$this->equalTo('bar'),
 			'Line: ' . __LINE__ . '.'
 		);
 	}
