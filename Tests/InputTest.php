@@ -7,7 +7,6 @@
 namespace Joomla\Input\Tests;
 
 use Joomla\Input\Input;
-use Joomla\Input\Cookie;
 use Joomla\Test\TestHelper;
 
 require_once __DIR__ . '/Stubs/FilterInputMock.php';
@@ -311,8 +310,8 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	{
 		// Check the object type.
 		$this->assertThat(
-			$this->instance->cookie instanceof Cookie,
-			$this->isTrue(),
+			$this->instance->cookie,
+			$this->isInstanceOf('Joomla\Input\Cookie'),
 			'Line: ' . __LINE__ . '.'
 		);
 
