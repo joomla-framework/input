@@ -7,7 +7,6 @@
 namespace Joomla\Input\Tests;
 
 use Joomla\Input\Input;
-use Joomla\Input\Cookie;
 use Joomla\Test\TestHelper;
 
 require_once __DIR__ . '/Stubs/FilterInputMock.php';
@@ -63,55 +62,35 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function test__get()
 	{
-		// Test super globals
-		$_POST['foo'] = 'bar';
-
-		// Test the get method.
 		$this->assertThat(
-			$this->instance->post->get('foo'),
-			$this->equalTo('bar'),
-			'Line: ' . __LINE__ . '.'
+			$this->instance->get,
+			$this->isInstanceOf('Joomla\Input\Input')
 		);
 
-		// Test the set method.
-		$this->instance->post->set('foo', 'notbar');
 		$this->assertThat(
-			$this->instance->post->get('foo'),
-			$this->equalTo('notbar'),
-			'Line: ' . __LINE__ . '.'
+			$this->instance->post,
+			$this->isInstanceOf('Joomla\Input\Input')
 		);
 
-		$_GET['foo'] = 'bar';
-
-		// Test the get method.
 		$this->assertThat(
-			$this->instance->get->get('foo'),
-			$this->equalTo('bar')
+			$this->instance->cli,
+			$this->isInstanceOf('Joomla\Input\Cli')
 		);
 
-		// Test the set method.
-		$this->instance->get->set('foo', 'notbar');
 		$this->assertThat(
-			$this->instance->get->get('foo'),
-			$this->equalTo('notbar')
+			$this->instance->cookie,
+			$this->isInstanceOf('Joomla\Input\Cookie')
 		);
 
-		// Test input class Cli
-		$this->instance->cli->set('foo', 'bar');
 		$this->assertThat(
-			$this->instance->cli->get('foo'),
-			$this->equalTo('bar')
+			$this->instance->files,
+			$this->isInstanceOf('Joomla\Input\Files')
 		);
 
-		// Test input class Json
-		$this->instance->json->set('foo', 'bar');
 		$this->assertThat(
-			$this->instance->json->get('foo'),
-			$this->equalTo('bar')
+			$this->instance->json,
+			$this->isInstanceOf('Joomla\Input\Json')
 		);
-
-		// Input classes Cookie and Files yet to be completed
-		$this->markTestIncomplete();
 	}
 
 	/**
@@ -217,8 +196,8 @@ class InputTest extends \PHPUnit_Framework_TestCase
 		$this->instance->set('foo', 'bar');
 
 		$this->assertThat(
-			$_REQUEST['foo'],
-			$this->equalTo('bar2'),
+			$this->instance->get('foo'),
+			$this->equalTo('bar'),
 			'Line: ' . __LINE__ . '.'
 		);
 	}
@@ -359,8 +338,8 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	{
 		// Check the object type.
 		$this->assertThat(
-			$this->instance->cookie instanceof Cookie,
-			$this->isTrue(),
+			$this->instance->cookie,
+			$this->isInstanceOf('Joomla\Input\Cookie'),
 			'Line: ' . __LINE__ . '.'
 		);
 
