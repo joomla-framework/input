@@ -62,7 +62,35 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function test__get()
 	{
-		$this->markTestIncomplete();
+		$this->assertThat(
+			$this->instance->get,
+			$this->isInstanceOf('Joomla\Input\Input')
+		);
+
+		$this->assertThat(
+			$this->instance->post,
+			$this->isInstanceOf('Joomla\Input\Input')
+		);
+
+		$this->assertThat(
+			$this->instance->cli,
+			$this->isInstanceOf('Joomla\Input\Cli')
+		);
+
+		$this->assertThat(
+			$this->instance->cookie,
+			$this->isInstanceOf('Joomla\Input\Cookie')
+		);
+
+		$this->assertThat(
+			$this->instance->files,
+			$this->isInstanceOf('Joomla\Input\Files')
+		);
+
+		$this->assertThat(
+			$this->instance->json,
+			$this->isInstanceOf('Joomla\Input\Json')
+		);
 	}
 
 	/**
