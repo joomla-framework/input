@@ -225,6 +225,26 @@ class InputTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Test the Joomla\Input\Input::get method with integer 0.
+	 *
+	 * @return  void
+	 *
+	 * @covers  Joomla\Input\Input::get
+	 * @since   1.0
+	 */
+	public function testGetIntegerWithNullString()
+	{
+		$instance = $this->getInputObject(array('foo' => ''));
+
+		$this->assertEquals(
+			0,
+			$instance->getInt('foo', 0, 'INTEGER')
+		);
+
+		$this->assertInternalType('integer', $instance->get('foo', 0, 'INTEGER'));
+	}
+
+	/**
 	 * Test the Joomla\Input\Input::get method with float 0.0.
 	 *
 	 * @return  void
