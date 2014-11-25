@@ -180,7 +180,7 @@ class Input implements \Serializable, \Countable
 		{
 			$filteredValue = $this->filter->clean($this->data[$name], $filter);
 
-			if ($filteredValue)
+			if ($filteredValue === null)
 			{
 				return $filteredValue;
 			}
