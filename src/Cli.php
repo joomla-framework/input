@@ -134,9 +134,7 @@ class Cli extends Input
 	protected function parseArguments()
 	{
 		$argv = $_SERVER['argv'];
-
 		$this->executable = array_shift($argv);
-
 		$out = array();
 
 		for ($i = 0, $j = count($argv); $i < $j; $i++)
@@ -163,6 +161,7 @@ class Cli extends Input
 					{
 						$value          = isset($out[$key]) ? $out[$key] : true;
 					}
+
 					$out[$key]          = $value;
 				}
 
@@ -176,7 +175,7 @@ class Cli extends Input
 			}
 
 			// -k=value -abc
-			else if (substr($arg, 0, 1) === '-')
+			elseif (substr($arg, 0, 1) === '-')
 			{
 				// -k=value
 				if (substr($arg, 2, 1) === '=')
@@ -206,7 +205,7 @@ class Cli extends Input
 				}
 			}
 
-			// plain-arg
+			// Plain-arg
 			else
 			{
 				$this->args[] = $arg;
