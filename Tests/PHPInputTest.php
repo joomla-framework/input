@@ -51,10 +51,10 @@ class PHPInputTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function test__constructReadingFromGlobals()
 	{
-		$GLOBALS['HTTP_RAW_POST_DATA'] = 'a=1&b=2';
+		$GLOBALS['HTTP_RAW_POST_DATA'] = 'a=1&b=two';
 
 		$instance = new PHPInput;
 
-		$this->assertAttributeSame(['a' => 1, 'b' => 2], 'data', $instance);
+		$this->assertAttributeSame(['a' => '1', 'b' => 'two'], 'data', $instance);
 	}
 }
