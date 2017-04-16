@@ -178,7 +178,12 @@ class Input implements \Serializable, \Countable
 	{
 		if (isset($this->data[$name]))
 		{
-			return $this->filter->clean($this->data[$name], $filter);
+			$filteredValue = $this->filter->clean($this->data[$name], $filter);
+
+			if ($filteredValue === null)
+			{
+				return $filteredValue;
+			}
 		}
 
 		return $default;
