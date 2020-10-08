@@ -25,19 +25,19 @@ use Joomla\Filter;
  * @property-read    Files   $files
  * @property-read    Cookie  $cookie
  *
- * @method      integer  getInt($name, $default = null)       Get a signed integer.
- * @method      integer  getUint($name, $default = null)      Get an unsigned integer.
- * @method      float    getFloat($name, $default = null)     Get a floating-point number.
- * @method      boolean  getBool($name, $default = null)      Get a boolean value.
- * @method      string   getWord($name, $default = null)      Get a word.
- * @method      string   getAlnum($name, $default = null)     Get an alphanumeric string.
- * @method      string   getCmd($name, $default = null)       Get a CMD filtered string.
- * @method      string   getBase64($name, $default = null)    Get a base64 encoded string.
- * @method      string   getString($name, $default = null)    Get a string.
- * @method      string   getHtml($name, $default = null)      Get a HTML string.
- * @method      string   getPath($name, $default = null)      Get a file path.
- * @method      string   getUsername($name, $default = null)  Get a username.
- * @method      mixed    getRaw($name, $default = null)       Get an unfiltered value.
+ * @method      integer  getInt($name, $default = null)         Get a signed integer.
+ * @method      integer  getUint($name, $default = null)        Get an unsigned integer.
+ * @method      float    getFloat($name, $default = null)       Get a floating-point number.
+ * @method      boolean  getBool($name, $default = null)        Get a boolean value.
+ * @method      string   getWord($name, $default = null)        Get a word.
+ * @method      string   getAlnum($name, $default = null)       Get an alphanumeric string.
+ * @method      string   getCmd($name, $default = null)         Get a CMD filtered string.
+ * @method      string   getBase64($name, $default = null)      Get a base64 encoded string.
+ * @method      string   getString($name, $default = null)      Get a string.
+ * @method      string   getHtml($name, $default = null)        Get a HTML string.
+ * @method      string   getPath($name, $default = null)        Get a file path.
+ * @method      string   getUsername($name, $default = null)    Get a username.
+ * @method      mixed    getRaw($name = null, $default = null)  Get an unfiltered value.
  */
 class Input implements \Countable
 {
