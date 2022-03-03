@@ -33,7 +33,8 @@ class Files extends Input
 	 */
 	public function __construct($source = null, array $options = [])
 	{
-		parent::__construct($source ?? $_FILES, $options);
+		$source = $source ?? $_FILES;
+		parent::__construct($source, $options);
 	}
 
 	/**

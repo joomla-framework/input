@@ -25,7 +25,8 @@ class Cookie extends Input
 	 */
 	public function __construct($source = null, array $options = [])
 	{
-		parent::__construct($source ?? $_COOKIE, $options);
+		$source = $source ?? $_COOKIE;
+		parent::__construct($source, $options);
 	}
 
 	/**
