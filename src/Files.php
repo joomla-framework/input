@@ -26,7 +26,7 @@ class Files extends Input
 	/**
 	 * The class constructor.
 	 *
-	 * @param   array|null  $source   The source argument is ignored. $_FILES is always used.
+	 * @param   array|null  $source   Source data (Optional, default is $_FILES)
 	 * @param   array       $options  Array of configuration parameters (Optional)
 	 *
 	 * @since   1.0
