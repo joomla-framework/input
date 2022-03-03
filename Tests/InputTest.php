@@ -425,6 +425,8 @@ class InputTest extends TestCase
 	 *
 	 * @dataProvider constructorCases
 	 * @return void
+	 *
+	 * @backupGlobals enabled
 	 */
 	public function testConstructorUsesRequestIfNeeded($constructorArgs, $expected): void
 	{
@@ -434,4 +436,66 @@ class InputTest extends TestCase
 
 		$this->assertEquals($expected, $input->get('var'));
 	}
-}
+
+	/**
+	 * @testdox   Input object for the request method GET is not polluted with POST data
+	 *
+	 * @covers    \Joomla\Input\Input
+	 *
+	 * @backupGlobals enabled
+	 */
+	public function testGetRequestForPostData(): void
+	{
+		$_POST    = ['polluted' => '1'];
+		$_GET     = [];
+		$_REQUEST = array_merge($_GET, $_POST);
+
+		$input = new Input($_GET);
+
+		$this->assertEquals(0, $input->get->count(), 'get is being polluted by the post!');
+	}
+
+	/**
+	 * @testdox  Input object for the request method POST is not polluted with GET data
+	 *
+	 * @covers   \Joomla\Input\Input
+	 *
+	 * @backupGlobals enabled
+	 */
+	public function testPostRequestForGetData(): void
+	{
+		$_GET     = ['polluted' => '1'];
+		$_POST    = [];
+		$_REQUEST = array_merge($_GET, $_POST);
+
+		$input = new Input($_POST);
+
+		$this->assertEquals(0, $input->post->count(), 'post is being polluted by the get!');
+	}
+
+	/**
+	 * @testdox  GET and POST data are kept separate
+	 *
+	 * @covers   \Joomla\Input\Input
+	 *
+	 * @backupGlobals enabled
+	 */
+	public function testRequestFromGlobals(): void
+	{
+		$_GET     = ['1' => '1', '2' => '2', '3' => '3'];
+		$_POST    = ['1' => '1', '2' => '2'];
+		$_REQUEST = array_merge($_GET, $_POST);
+
+		$input = new Input();
+
+		$this->assertEquals(
+			3,
+			$input->get->count(),
+			'Wrong number of items found in the $_GET in the input object when loading from GLOBALS'
+		);
+		$this->assertEquals(
+			2,
+			$input->post->count(),
+			'Wrong number of items found in the $_POST in the input object when loading from GLOBALS'
+		);
+	}}
