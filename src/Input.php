@@ -92,7 +92,7 @@ class Input implements \Countable
 	 */
 	public function __construct($source = null, array $options = [])
 	{
-		$this->data    = empty($source) ? $_REQUEST : $source;
+		$this->data    = $source ?? $_REQUEST;
 		$this->filter  = $options['filter'] ?? new Filter\InputFilter;
 		$this->options = $options;
 	}
