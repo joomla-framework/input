@@ -33,7 +33,7 @@ class Json extends Input
 	 *
 	 * @since   1.0
 	 */
-	public function __construct($source = null, array $options = [])
+	public function __construct(?array $source = null, array $options = [])
 	{
 		if ($source === null)
 		{

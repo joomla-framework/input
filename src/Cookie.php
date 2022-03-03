@@ -23,9 +23,9 @@ class Cookie extends Input
 	 *
 	 * @since   1.0
 	 */
-	public function __construct($source = null, array $options = [])
+	public function __construct(?array $source = null, array $options = [])
 	{
-		if (empty($source))
+		if ($source === null)
 		{
 			$source = $_COOKIE;
 		}

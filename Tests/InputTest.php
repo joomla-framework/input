@@ -389,6 +389,41 @@ class InputTest extends TestCase
 	}
 
 	/**
+	 * @testdox  Tests that the Input object for the request method GET is not polluted with POST data
+	 *
+	 * @covers   Joomla\Input\Input
+	 *
+	 * @backupGlobals enabled
+	 */
+	public function testGETRequestForPostData()
+	{
+		$_POST = ['polluted'=>'1'];
+		$_GET = [];
+		$_REQUEST = array_merge($_GET, $_POST);
+
+		$instance = $this->getInputObject($_GET);
+		$this->assertEquals(0, $instance->get->count(), 'get is being polluted by the post!');
+	}
+
+	/**
+	 * @testdox  Tests that the Input object for the request method POST is not polluted with GET data
+	 *
+	 * @covers   Joomla\Input\Input
+	 *
+	 * @backupGlobals enabled
+	 */
+	public function testPOSTRequestForGETData()
+	{
+		$_GET = ['polluted'=>'1'];
+		$_POST = [];
+		$_REQUEST = array_merge($_GET, $_POST);
+
+		$instance = $this->getInputObject($_POST);
+
+		$this->assertEquals(0, $instance->post->count(), 'post is being polluted by the get!');
+	}
+
+	/**
 	 * @testdox  Tests that the get method disallows access to non-whitelisted globals
 	 *
 	 * @covers   Joomla\Input\Input
