@@ -272,6 +272,8 @@ class InputTest extends TestCase
 
 		$input = $this->getInputObject($array);
 
+		$array['varNull'] = null;
+
 		$this->assertEquals(
 			$array,
 			$input->getArray(
