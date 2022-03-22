@@ -275,7 +275,7 @@ class InputTest extends TestCase
 		$this->assertEquals(
 			$array,
 			$input->getArray(
-				['var1' => 'string', 'var2' => 'int', 'var3' => 'array', 'var4' => ['var1' => ['var2' => 'array']]]
+				['var1' => 'string', 'var2' => 'int', 'var3' => 'array', 'var4' => ['var1' => ['var2' => 'array']], 'varNull' => 'string']
 			)
 		);
 	}
