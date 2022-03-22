@@ -205,7 +205,7 @@ class Input implements \Countable
 				}
 				else
 				{
-					$results[$k] = $this->getArray($v, $datasource[$k]);
+					$results[$k] = $this->getArray($v, $datasource[$k] ?? null);
 				}
 			}
 			else
