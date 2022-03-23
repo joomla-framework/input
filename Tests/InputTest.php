@@ -281,6 +281,36 @@ class InputTest extends TestCase
 	}
 
 	/**
+	 * @testdox  Tests that an array of keys are read from the data source with Null values
+	 *
+	 * @covers   Joomla\Input\Input
+	 */
+	public function testGetArrayWithNullFilterValues()
+	{
+		$this->filterMock->expects($this->any())
+			->method('clean')
+			->willReturnArgument(0);
+
+		$array = [
+			1 => 'value1',
+			2 => 34,
+			'varArr' => ['var1' => ['test']]
+		];
+
+		$input = $this->getInputObject($array);
+
+		$array[0] = null;
+		$array['varArr']['var1'][1] = null;
+
+		$this->assertEquals(
+			$array,
+			$input->getArray(
+				[0 => 'int', 1 => 'string', 2 => 'int', 'varArr' => ['var1' => [0 => 'string', 1 => 'string']]]
+			)
+		);
+	}
+
+	/**
 	 * @testdox  Tests that the full data array is read from the data source
 	 *
 	 * @covers   Joomla\Input\Input
