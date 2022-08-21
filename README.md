@@ -1,6 +1,9 @@
 # The Input Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/input/status.svg?ref=refs/heads/2.0-dev)](https://ci.joomla.org/joomla-framework/input)
 
-[![Latest Stable Version](https://poser.pugx.org/joomla/input/v/stable)](https://packagist.org/packages/joomla/input) [![Total Downloads](https://poser.pugx.org/joomla/input/downloads)](https://packagist.org/packages/joomla/input) [![Latest Unstable Version](https://poser.pugx.org/joomla/input/v/unstable)](https://packagist.org/packages/joomla/input) [![License](https://poser.pugx.org/joomla/input/license)](https://packagist.org/packages/joomla/input)
+[![Latest Stable Version](https://poser.pugx.org/joomla/input/v/stable)](https://packagist.org/packages/joomla/input)
+[![Total Downloads](https://poser.pugx.org/joomla/input/downloads)](https://packagist.org/packages/joomla/input)
+[![Latest Unstable Version](https://poser.pugx.org/joomla/input/v/unstable)](https://packagist.org/packages/joomla/input)
+[![License](https://poser.pugx.org/joomla/input/license)](https://packagist.org/packages/joomla/input)
 
 This package comprises of four classes, `Input\Input`and several sub-classes extended from it: `Input\Cookie`, `Input\Files`, and `Input\Json`. An input object is generally owned by the application and explicitly added to an application class as a public property, such as can be found in `Application\AbstractApplication`.
 
