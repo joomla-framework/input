@@ -24,6 +24,7 @@ use Joomla\Filter;
  * @property-read    Input   $env
  * @property-read    Files   $files
  * @property-read    Cookie  $cookie
+ * @property-read    Json    $json
  *
  * @method      integer  getInt($name, $default = null)       Get a signed integer.
  * @method      integer  getUint($name, $default = null)      Get an unsigned integer.
