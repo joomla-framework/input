@@ -42,307 +42,286 @@ use Joomla\Filter;
  */
 class Input implements \Countable
 {
-	/**
-	 * Container with allowed superglobals
-	 *
-	 * @var    array
-	 * @since  1.3.0
-	 */
-	private const ALLOWED_GLOBALS = ['REQUEST', 'GET', 'POST', 'FILES', 'SERVER', 'ENV'];
+    /**
+     * Container with allowed superglobals
+     *
+     * @var    array
+     * @since  1.3.0
+     */
+    private const ALLOWED_GLOBALS = ['REQUEST', 'GET', 'POST', 'FILES', 'SERVER', 'ENV'];
 
-	/**
-	 * Options array for the Input instance.
-	 *
-	 * @var    array
-	 * @since  1.0
-	 */
-	protected $options = [];
+    /**
+     * Options array for the Input instance.
+     *
+     * @var    array
+     * @since  1.0
+     */
+    protected $options = [];
 
-	/**
-	 * Filter object to use.
-	 *
-	 * @var    Filter\InputFilter
-	 * @since  1.0
-	 */
-	protected $filter;
+    /**
+     * Filter object to use.
+     *
+     * @var    Filter\InputFilter
+     * @since  1.0
+     */
+    protected $filter;
 
-	/**
-	 * Input data.
-	 *
-	 * @var    array
-	 * @since  1.0
-	 */
-	protected $data = [];
+    /**
+     * Input data.
+     *
+     * @var    array
+     * @since  1.0
+     */
+    protected $data = [];
 
-	/**
-	 * Input objects
-	 *
-	 * @var    Input[]
-	 * @since  1.0
-	 */
-	protected $inputs = [];
+    /**
+     * Input objects
+     *
+     * @var    Input[]
+     * @since  1.0
+     */
+    protected $inputs = [];
 
-	/**
-	 * Constructor.
-	 *
-	 * @param   array|null  $source   Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
-	 * @param   array       $options  An optional associative array of configuration parameters:
-	 *                                filter: An instance of Filter\Input. If omitted, a default filter is initialised.
-	 *
-	 * @since   1.0
-	 */
-	public function __construct($source = null, array $options = [])
-	{
-		$this->data    = $source ?? $_REQUEST;
-		$this->filter  = $options['filter'] ?? new Filter\InputFilter;
-		$this->options = $options;
-	}
+    /**
+     * Constructor.
+     *
+     * @param   array|null  $source   Optional source data. If omitted, a copy of the server variable '_REQUEST' is used.
+     * @param   array       $options  An optional associative array of configuration parameters:
+     *                                filter: An instance of Filter\Input. If omitted, a default filter is initialised.
+     *
+     * @since   1.0
+     */
+    public function __construct($source = null, array $options = [])
+    {
+        $this->data    = $source ?? $_REQUEST;
+        $this->filter  = $options['filter'] ?? new Filter\InputFilter();
+        $this->options = $options;
+    }
 
-	/**
-	 * Magic method to get an input object
-	 *
-	 * @param   mixed  $name  Name of the input object to retrieve.
-	 *
-	 * @return  Input  The request input object
-	 *
-	 * @since   1.0
-	 */
-	public function __get($name)
-	{
-		if (isset($this->inputs[$name]))
-		{
-			return $this->inputs[$name];
-		}
+    /**
+     * Magic method to get an input object
+     *
+     * @param   mixed  $name  Name of the input object to retrieve.
+     *
+     * @return  Input  The request input object
+     *
+     * @since   1.0
+     */
+    public function __get($name)
+    {
+        if (isset($this->inputs[$name])) {
+            return $this->inputs[$name];
+        }
 
-		$className = __NAMESPACE__ . '\\' . ucfirst($name);
+        $className = __NAMESPACE__ . '\\' . ucfirst($name);
 
-		if (class_exists($className))
-		{
-			$this->inputs[$name] = new $className(null, $this->options);
+        if (class_exists($className)) {
+            $this->inputs[$name] = new $className(null, $this->options);
 
-			return $this->inputs[$name];
-		}
+            return $this->inputs[$name];
+        }
 
-		$superGlobal = '_' . strtoupper($name);
+        $superGlobal = '_' . strtoupper($name);
 
-		if (\in_array(strtoupper($name), self::ALLOWED_GLOBALS, true) && isset($GLOBALS[$superGlobal]))
-		{
-			$this->inputs[$name] = new self($GLOBALS[$superGlobal], $this->options);
+        if (\in_array(strtoupper($name), self::ALLOWED_GLOBALS, true) && isset($GLOBALS[$superGlobal])) {
+            $this->inputs[$name] = new self($GLOBALS[$superGlobal], $this->options);
 
-			return $this->inputs[$name];
-		}
+            return $this->inputs[$name];
+        }
 
-		$trace = debug_backtrace();
-		trigger_error(
-			'Undefined property via __get(): ' . $name . ' in ' . $trace[0]['file'] . ' on line ' . $trace[0]['line'],
-			E_USER_NOTICE
-		);
-	}
+        $trace = debug_backtrace();
+        trigger_error(
+            'Undefined property via __get(): ' . $name . ' in ' . $trace[0]['file'] . ' on line ' . $trace[0]['line'],
+            E_USER_NOTICE
+        );
+    }
 
-	/**
-	 * Get the number of variables.
-	 *
-	 * @return  integer  The number of variables in the input.
-	 *
-	 * @since   1.0
-	 * @see     Countable::count()
-	 */
-	#[\ReturnTypeWillChange]
-	public function count()
-	{
-		return \count($this->data);
-	}
+    /**
+     * Get the number of variables.
+     *
+     * @return  integer  The number of variables in the input.
+     *
+     * @since   1.0
+     * @see     Countable::count()
+     */
+    #[\ReturnTypeWillChange]
+    public function count()
+    {
+        return \count($this->data);
+    }
 
-	/**
-	 * Gets a value from the input data.
-	 *
-	 * @param   string  $name     Name of the value to get.
-	 * @param   mixed   $default  Default value to return if variable does not exist.
-	 * @param   string  $filter   Filter to apply to the value.
-	 *
-	 * @return  mixed  The filtered input value.
-	 *
-	 * @see     \Joomla\Filter\InputFilter::clean()
-	 * @since   1.0
-	 */
-	public function get($name, $default = null, $filter = 'cmd')
-	{
-		if ($this->exists($name))
-		{
-			return $this->filter->clean($this->data[$name], $filter);
-		}
+    /**
+     * Gets a value from the input data.
+     *
+     * @param   string  $name     Name of the value to get.
+     * @param   mixed   $default  Default value to return if variable does not exist.
+     * @param   string  $filter   Filter to apply to the value.
+     *
+     * @return  mixed  The filtered input value.
+     *
+     * @see     \Joomla\Filter\InputFilter::clean()
+     * @since   1.0
+     */
+    public function get($name, $default = null, $filter = 'cmd')
+    {
+        if ($this->exists($name)) {
+            return $this->filter->clean($this->data[$name], $filter);
+        }
 
-		return $default;
-	}
+        return $default;
+    }
 
-	/**
-	 * Gets an array of values from the request.
-	 *
-	 * @param   array  $vars        Associative array of keys and filter types to apply.
-	 *                              If empty and datasource is null, all the input data will be returned
-	 *                              but filtered using the default case in InputFilter::clean.
-	 * @param   mixed  $datasource  Array to retrieve data from, or null
-	 *
-	 * @return  mixed  The filtered input data.
-	 *
-	 * @since   1.0
-	 */
-	public function getArray(array $vars = [], $datasource = null)
-	{
-		if (empty($vars) && $datasource === null)
-		{
-			$vars = $this->data;
-		}
+    /**
+     * Gets an array of values from the request.
+     *
+     * @param   array  $vars        Associative array of keys and filter types to apply.
+     *                              If empty and datasource is null, all the input data will be returned
+     *                              but filtered using the default case in InputFilter::clean.
+     * @param   mixed  $datasource  Array to retrieve data from, or null
+     *
+     * @return  mixed  The filtered input data.
+     *
+     * @since   1.0
+     */
+    public function getArray(array $vars = [], $datasource = null)
+    {
+        if (empty($vars) && $datasource === null) {
+            $vars = $this->data;
+        }
 
-		$results = [];
+        $results = [];
 
-		foreach ($vars as $k => $v)
-		{
-			if (\is_array($v))
-			{
-				if ($datasource === null)
-				{
-					$results[$k] = $this->getArray($v, $this->get($k, null, 'array'));
-				}
-				else
-				{
-					$results[$k] = $this->getArray($v, $datasource[$k]);
-				}
-			}
-			else
-			{
-				if ($datasource === null)
-				{
-					$results[$k] = $this->get($k, null, $v);
-				}
-				elseif (isset($datasource[$k]))
-				{
-					$results[$k] = $this->filter->clean($datasource[$k], $v);
-				}
-				else
-				{
-					$results[$k] = $this->filter->clean(null, $v);
-				}
-			}
-		}
+        foreach ($vars as $k => $v) {
+            if (\is_array($v)) {
+                if ($datasource === null) {
+                    $results[$k] = $this->getArray($v, $this->get($k, null, 'array'));
+                } else {
+                    $results[$k] = $this->getArray($v, $datasource[$k]);
+                }
+            } else {
+                if ($datasource === null) {
+                    $results[$k] = $this->get($k, null, $v);
+                } elseif (isset($datasource[$k])) {
+                    $results[$k] = $this->filter->clean($datasource[$k], $v);
+                } else {
+                    $results[$k] = $this->filter->clean(null, $v);
+                }
+            }
+        }
 
-		return $results;
-	}
+        return $results;
+    }
 
-	/**
-	 * Get the Input instance holding the data for the current request method
-	 *
-	 * @return  Input
-	 *
-	 * @since   1.3.0
-	 */
-	public function getInputForRequestMethod()
-	{
-		switch (strtoupper($this->getMethod()))
-		{
-			case 'GET':
-				return $this->get;
+    /**
+     * Get the Input instance holding the data for the current request method
+     *
+     * @return  Input
+     *
+     * @since   1.3.0
+     */
+    public function getInputForRequestMethod()
+    {
+        switch (strtoupper($this->getMethod())) {
+            case 'GET':
+                return $this->get;
 
-			case 'POST':
-				return $this->post;
+            case 'POST':
+                return $this->post;
 
-			default:
-				// PUT, PATCH, etc. don't have superglobals
-				return $this;
-		}
-	}
+            default:
+                // PUT, PATCH, etc. don't have superglobals
+                return $this;
+        }
+    }
 
-	/**
-	 * Sets a value
-	 *
-	 * @param   string  $name   Name of the value to set.
-	 * @param   mixed   $value  Value to assign to the input.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function set($name, $value)
-	{
-		$this->data[$name] = $value;
-	}
+    /**
+     * Sets a value
+     *
+     * @param   string  $name   Name of the value to set.
+     * @param   mixed   $value  Value to assign to the input.
+     *
+     * @return  void
+     *
+     * @since   1.0
+     */
+    public function set($name, $value)
+    {
+        $this->data[$name] = $value;
+    }
 
-	/**
-	 * Define a value. The value will only be set if there's no value for the name or if it is null.
-	 *
-	 * @param   string  $name   Name of the value to define.
-	 * @param   mixed   $value  Value to assign to the input.
-	 *
-	 * @return  void
-	 *
-	 * @since   1.0
-	 */
-	public function def($name, $value)
-	{
-		if (isset($this->data[$name]))
-		{
-			return;
-		}
+    /**
+     * Define a value. The value will only be set if there's no value for the name or if it is null.
+     *
+     * @param   string  $name   Name of the value to define.
+     * @param   mixed   $value  Value to assign to the input.
+     *
+     * @return  void
+     *
+     * @since   1.0
+     */
+    public function def($name, $value)
+    {
+        if (isset($this->data[$name])) {
+            return;
+        }
 
-		$this->data[$name] = $value;
-	}
+        $this->data[$name] = $value;
+    }
 
-	/**
-	 * Check if a value name exists.
-	 *
-	 * @param   string  $name  Value name
-	 *
-	 * @return  boolean
-	 *
-	 * @since   1.2.0
-	 */
-	public function exists($name)
-	{
-		return isset($this->data[$name]);
-	}
+    /**
+     * Check if a value name exists.
+     *
+     * @param   string  $name  Value name
+     *
+     * @return  boolean
+     *
+     * @since   1.2.0
+     */
+    public function exists($name)
+    {
+        return isset($this->data[$name]);
+    }
 
-	/**
-	 * Magic method to get filtered input data.
-	 *
-	 * @param   string  $name       Name of the filter type prefixed with 'get'.
-	 * @param   array   $arguments  [0] The name of the variable [1] The default value.
-	 *
-	 * @return  mixed   The filtered input value.
-	 *
-	 * @since   1.0
-	 */
-	public function __call($name, $arguments)
-	{
-		if (substr($name, 0, 3) == 'get')
-		{
-			$filter = substr($name, 3);
+    /**
+     * Magic method to get filtered input data.
+     *
+     * @param   string  $name       Name of the filter type prefixed with 'get'.
+     * @param   array   $arguments  [0] The name of the variable [1] The default value.
+     *
+     * @return  mixed   The filtered input value.
+     *
+     * @since   1.0
+     */
+    public function __call($name, $arguments)
+    {
+        if (substr($name, 0, 3) == 'get') {
+            $filter = substr($name, 3);
 
-			$default = null;
+            $default = null;
 
-			if (isset($arguments[1]))
-			{
-				$default = $arguments[1];
-			}
+            if (isset($arguments[1])) {
+                $default = $arguments[1];
+            }
 
-			return $this->get($arguments[0], $default, $filter);
-		}
+            return $this->get($arguments[0], $default, $filter);
+        }
 
-		$trace = debug_backtrace();
-		trigger_error(
-			'Call to undefined method via call(): ' . $name . ' in ' . $trace[0]['file'] . ' on line ' . $trace[0]['line'],
-			E_USER_ERROR
-		);
-	}
+        $trace = debug_backtrace();
+        trigger_error(
+            'Call to undefined method via call(): ' . $name . ' in ' . $trace[0]['file'] . ' on line ' . $trace[0]['line'],
+            E_USER_ERROR
+        );
+    }
 
-	/**
-	 * Gets the request method.
-	 *
-	 * @return  string   The request method.
-	 *
-	 * @since   1.0
-	 */
-	public function getMethod()
-	{
-		return strtoupper($this->server->getCmd('REQUEST_METHOD'));
-	}
+    /**
+     * Gets the request method.
+     *
+     * @return  string   The request method.
+     *
+     * @since   1.0
+     */
+    public function getMethod()
+    {
+        return strtoupper($this->server->getCmd('REQUEST_METHOD'));
+    }
 }
