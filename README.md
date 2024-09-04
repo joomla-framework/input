@@ -1,4 +1,4 @@
-# The Input Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/input/status.svg?ref=refs/heads/2.0-dev)](https://ci.joomla.org/joomla-framework/input)
+# The Input Package [![Build Status](https://ci.joomla.org/api/badges/joomla-framework/input/status.svg?ref=refs/heads/3.x-dev)](https://ci.joomla.org/joomla-framework/input)
 
 [![Latest Stable Version](https://poser.pugx.org/joomla/input/v/stable)](https://packagist.org/packages/joomla/input)
 [![Total Downloads](https://poser.pugx.org/joomla/input/downloads)](https://packagist.org/packages/joomla/input)
@@ -229,12 +229,12 @@ The following changes have been made to the `Input` package since 1.x.
 
 ## Installation via Composer
 
-Add `"joomla/input": "~2.0"` to the require block in your composer.json and then run `composer install`.
+Add `"joomla/input": "~3.0"` to the require block in your composer.json and then run `composer install`.
 
 ```json
 {
 	"require": {
-		"joomla/input": "~2.0"
+		"joomla/input": "~3.0"
 	}
 }
 ```
@@ -242,11 +242,11 @@ Add `"joomla/input": "~2.0"` to the require block in your composer.json and then
 Alternatively, you can simply run the following from the command line:
 
 ```sh
-composer require joomla/input "~2.0"
+composer require joomla/input "~3.0"
 ```
 
 If you want to include the test sources, use
 
 ```sh
-composer require --prefer-source joomla/input "~2.0"
+composer require --prefer-source joomla/input "~3.0"
 ```
