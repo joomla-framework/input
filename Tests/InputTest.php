@@ -10,6 +10,7 @@ namespace Joomla\Input\Tests;
 use Joomla\Filter\InputFilter;
 use Joomla\Input\Input;
 use Joomla\Test\TestHelper;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -398,37 +399,36 @@ class InputTest extends TestCase
         $this->getInputObject()->_phpunit_configuration_file;
     }
 
-    public function constructorCases(): \Generator
+    public function constructorCasesProvider(): array
     {
-        yield 'no source' => [
-            'constructor-arg' => null,
-            'expected'        => 'value',
-        ];
-
-        yield 'empty source' => [
-            'constructor-arg' => [],
-            'expected'        => null,
-        ];
-
-        yield 'non-empty source' => [
-            'constructor-arg' => ['foo' => 'bar'],
-            'expected'        => null,
-        ];
-
-        yield 'same key' => [
-            'constructor-arg' => ['var' => 'bar'],
-            'expected'        => 'bar',
+        return [
+            'no source' => [
+                'constructor-arg' => null,
+                'expected'        => 'value',
+            ],
+            'empty source' => [
+                'constructor-arg' => [],
+                'expected'        => null,
+            ],
+            'non-empty source' => [
+                'constructor-arg' => ['foo' => 'bar'],
+                'expected'        => null,
+            ],
+            'same key' => [
+                'constructor-arg' => ['var' => 'bar'],
+                'expected'        => 'bar',
+            ]
         ];
     }
 
     /**
      * @testdox If no source is provided ($source === null), $_REQUEST is used. If any source is provided ($source !== null), $_REQUEST is ignored.
      *
-     * @dataProvider constructorCases
      * @return void
      *
      * @backupGlobals enabled
      */
+    #[DataProvider('constructorCasesProvider')]
     public function testConstructorUsesRequestIfNeeded($constructorArgs, $expected): void
     {
         $_REQUEST = ['var' => 'value'];
