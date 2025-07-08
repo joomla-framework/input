@@ -234,7 +234,7 @@ Add `"joomla/input": "~3.0"` to the require block in your composer.json and then
 ```json
 {
 	"require": {
-		"joomla/input": "~3.0"
+		"joomla/input": "~4.0"
 	}
 }
 ```
@@ -242,11 +242,11 @@ Add `"joomla/input": "~3.0"` to the require block in your composer.json and then
 Alternatively, you can simply run the following from the command line:
 
 ```sh
-composer require joomla/input "~3.0"
+composer require joomla/input "~4.0"
 ```
 
 If you want to include the test sources, use
 
 ```sh
-composer require --prefer-source joomla/input "~3.0"
+composer require --prefer-source joomla/input "~4.0"
 ```
