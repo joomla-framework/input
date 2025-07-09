@@ -13,6 +13,7 @@ use Joomla\Test\TestHelper;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Throwable;
 
 /**
  * Test class for \Joomla\Input\Input.
@@ -102,9 +103,8 @@ class InputTest extends TestCase
      */
     public function test__callThrowsAnErrorIfAnUndefinedMethodIsCalled(): void
     {
-        $this->expectError();
+        $this->expectException(Throwable::class);
 
-        /** @noinspection PhpUndefinedMethodInspection */
         $this->getInputObject()->setRaw();
     }
 
@@ -154,7 +154,7 @@ class InputTest extends TestCase
      */
     public function test__getThrowsAnErrorIfAnUndefinedPropertyIsCalled(): void
     {
-        $this->expectError();
+        $this->expectException(Throwable::class);
 
         /** @noinspection PhpUndefinedFieldInspection */
         $this->getInputObject()->put;
@@ -395,27 +395,28 @@ class InputTest extends TestCase
      */
     public function testGetDoesNotSupportNonWhitelistedGlobals(): void
     {
-        $this->expectError();
+        $this->expectException(Throwable::class);
+
         $this->getInputObject()->_phpunit_configuration_file;
     }
 
-    public function constructorCasesProvider(): array
+    public static function constructorCasesProvider(): array
     {
         return [
             'no source' => [
-                'constructor-arg' => null,
+                'constructorArgs' => null,
                 'expected'        => 'value',
             ],
             'empty source' => [
-                'constructor-arg' => [],
+                'constructorArgs' => [],
                 'expected'        => null,
             ],
             'non-empty source' => [
-                'constructor-arg' => ['foo' => 'bar'],
+                'constructorArgs' => ['foo' => 'bar'],
                 'expected'        => null,
             ],
             'same key' => [
-                'constructor-arg' => ['var' => 'bar'],
+                'constructorArgs' => ['var' => 'bar'],
                 'expected'        => 'bar',
             ]
         ];
