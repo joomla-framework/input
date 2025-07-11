@@ -1,0 +1,16 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Strict comparison using \\=\\=\\= between true and false will always evaluate to false\\.$#"
+			count: 1
+			path: src/Cookie.php
+
+		-
+			message: "#^Method Joomla\\\\Input\\\\Input\\:\\:__get\\(\\) should return Joomla\\\\Input\\\\Input but return statement is missing\\.$#"
+			count: 1
+			path: src/Input.php
+
+		-
+			message: "#^Parameter \\#1 \\$source of method Joomla\\\\Filter\\\\InputFilter\\:\\:clean\\(\\) expects array\\<string\\>\\|object\\|string, null given\\.$#"
+			count: 1
+			path: src/Input.php
