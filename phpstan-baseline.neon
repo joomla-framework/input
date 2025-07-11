@@ -1,0 +1,7 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Parameter \#1 \$source of method Joomla\\Filter\\InputFilter\:\:clean\(\) expects array\<string\>\|object\|string, null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Input.php

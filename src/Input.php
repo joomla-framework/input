@@ -9,6 +9,7 @@
 
 namespace Joomla\Input;
 
+use Exception;
 use Joomla\Filter;
 
 /**
@@ -106,6 +107,7 @@ class Input implements \Countable
      *
      * @return  Input  The request input object
      *
+     * @throws  Exception
      * @since   1.0
      */
     public function __get($name)
@@ -130,11 +132,7 @@ class Input implements \Countable
             return $this->inputs[$name];
         }
 
-        $trace = debug_backtrace();
-        trigger_error(
-            'Undefined property via __get(): ' . $name . ' in ' . $trace[0]['file'] . ' on line ' . $trace[0]['line'],
-            E_USER_NOTICE
-        );
+        throw new Exception('Undefined property via __get(): ' . $name);
     }
 
     /**
@@ -291,6 +289,7 @@ class Input implements \Countable
      *
      * @return  mixed   The filtered input value.
      *
+     * @throws  Exception
      * @since   1.0
      */
     public function __call($name, $arguments)
@@ -307,11 +306,7 @@ class Input implements \Countable
             return $this->get($arguments[0], $default, $filter);
         }
 
-        $trace = debug_backtrace();
-        trigger_error(
-            'Call to undefined method via call(): ' . $name . ' in ' . $trace[0]['file'] . ' on line ' . $trace[0]['line'],
-            E_USER_ERROR
-        );
+        throw new Exception('Call to undefined method via call(): ' . $name);
     }
 
     /**

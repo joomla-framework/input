@@ -76,23 +76,7 @@ class CookieTest extends TestCase
     }
 
     /**
-     * @testdox  Tests that data is correctly set with the legacy signature
-     *
-     * @covers   Joomla\Input\Cookie
-     * @uses     Joomla\Input\Input
-     */
-    public function testSetWithLegacySignature()
-    {
-        $mockFilter = $this->createMock(InputFilter::class);
-
-        $instance = new Cookie([], ['filter' => $mockFilter]);
-        $instance->set('foo', 'bar', 15);
-
-        $this->assertTrue(CookieDataStore::has('foo'));
-    }
-
-    /**
-     * @testdox  Tests that data is correctly set with the new signature
+     * @testdox  Tests that data is correctly set
      *
      * @covers   Joomla\Input\Cookie
      * @uses     Joomla\Input\Input
@@ -114,44 +98,9 @@ namespace Joomla\Input;
 
 use Joomla\Input\Tests\CookieDataStore;
 
-if (version_compare(PHP_VERSION, '7.3', '>=')) {
-    /**
-     * Stub.
-     *
-     * @param   string  $name     Name
-     * @param   string  $value    Value
-     * @param   array   $options  Expire
-     *
-     * @return  bool
-     *
-     * @since   1.1.4
-     */
-    function setcookie($name, $value, $options = [])
-    {
-        CookieDataStore::set($name, $value);
+function setcookie($name, $value, $options = [])
+{
+    CookieDataStore::set($name, $value);
 
-        return true;
-    }
-} else {
-    /**
-     * Stub.
-     *
-     * @param   string  $name      Name
-     * @param   string  $value     Value
-     * @param   int     $expire    Expire
-     * @param   string  $path      Path
-     * @param   string  $domain    Domain
-     * @param   bool    $secure    Secure
-     * @param   bool    $httpOnly  HttpOnly
-     *
-     * @return  bool
-     *
-     * @since   1.1.4
-     */
-    function setcookie($name, $value, $expire = 0, $path = '', $domain = '', $secure = false, $httpOnly = false)
-    {
-        CookieDataStore::set($name, $value);
-
-        return true;
-    }
+    return true;
 }
