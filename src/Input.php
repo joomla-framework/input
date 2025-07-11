@@ -306,7 +306,7 @@ class Input implements \Countable
             return $this->get($arguments[0], $default, $filter);
         }
 
-        throw new Exception();
+        throw new Exception('Call to undefined method via call(): ' . $name);
     }
 
     /**
