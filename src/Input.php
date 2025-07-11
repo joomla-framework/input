@@ -132,7 +132,7 @@ class Input implements \Countable
             return $this->inputs[$name];
         }
 
-        throw new Exception();
+        throw new Exception('Undefined property via __get(): ' . $name);
     }
 
     /**
