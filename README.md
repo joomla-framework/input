@@ -229,7 +229,7 @@ The following changes have been made to the `Input` package since 1.x.
 
 ## Installation via Composer
 
-Add `"joomla/input": "~3.0"` to the require block in your composer.json and then run `composer install`.
+Add `"joomla/input": "~4.0"` to the require block in your composer.json and then run `composer install`.
 
 ```json
 {
