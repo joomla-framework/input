@@ -50,7 +50,7 @@ class Cookie extends Input
      *
      * @since   1.0
      */
-    public function set($name, $value, array $options = []): void
+    public function set($name, $value, $options = [])
     {
         // Set the cookie
         setcookie($name, $value, $options);
