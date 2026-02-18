@@ -40,12 +40,12 @@ class FilesTest extends TestCase
     public function test__constructDependencyInjection()
     {
         $src        = ['foo' => 'bar'];
-        $mockFilter = $this->createMock(InputFilter::class);
+        $stubFilter = $this->createStub(InputFilter::class);
 
-        $instance = new Files($src, ['filter' => $mockFilter]);
+        $instance = new Files($src, ['filter' => $stubFilter]);
 
         $this->assertSame($src, TestHelper::getValue($instance, 'data'));
-        $this->assertSame($mockFilter, TestHelper::getValue($instance, 'filter'));
+        $this->assertSame($stubFilter, TestHelper::getValue($instance, 'filter'));
     }
 
     /**
@@ -73,9 +73,9 @@ class FilesTest extends TestCase
             ],
         ];
 
-        $mockFilter = $this->createMock(InputFilter::class);
+        $stubFilter = $this->createStub(InputFilter::class);
 
-        $instance = new Files($data, ['filter' => $mockFilter]);
+        $instance = new Files($data, ['filter' => $stubFilter]);
 
         $this->assertEquals('foobar', $instance->get('myfile3', 'foobar'), 'The default value is returned if data does not exist.');
 
@@ -110,9 +110,9 @@ class FilesTest extends TestCase
             ],
         ];
 
-        $mockFilter = $this->createMock(InputFilter::class);
+        $stubFilter = $this->createStub(InputFilter::class);
 
-        $instance = new Files($data, ['filter' => $mockFilter]);
+        $instance = new Files($data, ['filter' => $stubFilter]);
 
         $this->assertEquals(
             [

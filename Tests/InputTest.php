@@ -10,6 +10,7 @@ namespace Joomla\Input\Tests;
 use Joomla\Filter\InputFilter;
 use Joomla\Input\Input;
 use Joomla\Test\TestHelper;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -18,6 +19,7 @@ use Throwable;
 /**
  * Test class for \Joomla\Input\Input.
  */
+#[AllowMockObjectsWithoutExpectations]
 class InputTest extends TestCase
 {
     /**

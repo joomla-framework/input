@@ -40,12 +40,12 @@ class JsonTest extends TestCase
     public function test__constructDependencyInjection()
     {
         $src        = ['foo' => 'bar'];
-        $mockFilter = $this->createMock(InputFilter::class);
+        $stubFilter = $this->createStub(InputFilter::class);
 
-        $instance = new Json($src, ['filter' => $mockFilter]);
+        $instance = new Json($src, ['filter' => $stubFilter]);
 
         $this->assertSame($src, TestHelper::getValue($instance, 'data'));
-        $this->assertSame($mockFilter, TestHelper::getValue($instance, 'filter'));
+        $this->assertSame($stubFilter, TestHelper::getValue($instance, 'filter'));
     }
 
     /**

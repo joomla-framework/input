@@ -67,12 +67,12 @@ class CookieTest extends TestCase
     public function test__constructDependencyInjection()
     {
         $src        = ['foo' => 'bar'];
-        $mockFilter = $this->createMock(InputFilter::class);
+        $stubFilter = $this->createStub(InputFilter::class);
 
-        $instance = new Cookie($src, ['filter' => $mockFilter]);
+        $instance = new Cookie($src, ['filter' => $stubFilter]);
 
         $this->assertSame($src, TestHelper::getValue($instance, 'data'));
-        $this->assertSame($mockFilter, TestHelper::getValue($instance, 'filter'));
+        $this->assertSame($stubFilter, TestHelper::getValue($instance, 'filter'));
     }
 
     /**
@@ -83,9 +83,9 @@ class CookieTest extends TestCase
      */
     public function testSetWithNewSignature()
     {
-        $mockFilter = $this->createMock(InputFilter::class);
+        $stubFilter = $this->createStub(InputFilter::class);
 
-        $instance = new Cookie([], ['filter' => $mockFilter]);
+        $instance = new Cookie([], ['filter' => $stubFilter]);
         $instance->set('foo', 'bar', ['expire' => 15, 'samesite' => 'Strict']);
 
         $this->assertTrue(CookieDataStore::has('foo'));
