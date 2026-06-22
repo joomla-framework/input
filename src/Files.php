@@ -9,6 +9,8 @@
 
 namespace Joomla\Input;
 
+use Joomla\Filter\InputFilter;
+
 /**
  * Joomla! Input Files Class
  *
@@ -43,12 +45,14 @@ class Files extends Input
      *
      * @param   string  $name     The name of the input property (usually the name of the files INPUT tag) to get.
      * @param   mixed   $default  The default value to return if the named property does not exist.
+     * @param   string  $filter   The filter to apply to the value.
      *
-     * @return  mixed  The input value.
+     * @return  mixed  The filtered input value.
      *
+     * @see     \Joomla\Filter\InputFilter::clean()
      * @since   1.0
      */
-    public function get($name, $default = null)
+    public function get($name, $default = null, $filter = 'cmd')
     {
         if (isset($this->data[$name])) {
             $results = $this->decodeData(
@@ -60,6 +64,15 @@ class Files extends Input
                     $this->data[$name]['size'],
                 ]
             );
+
+            // Prevent returning an unsafe file unless specifically requested
+            if (strtoupper($filter) !== 'RAW') {
+                $isSafe = InputFilter::isSafeFile($results);
+
+                if (!$isSafe) {
+                    return $default;
+                }
+            }
 
             return $results;
         }
