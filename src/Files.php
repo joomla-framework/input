@@ -43,14 +43,12 @@ class Files extends Input
      *
      * @param   string  $name     The name of the input property (usually the name of the files INPUT tag) to get.
      * @param   mixed   $default  The default value to return if the named property does not exist.
-     * @param   string  $filter   The filter to apply to the value.
      *
-     * @return  mixed  The filtered input value.
+     * @return  mixed  The input value.
      *
-     * @see     \Joomla\Filter\InputFilter::clean()
      * @since   1.0
      */
-    public function get($name, $default = null, $filter = 'cmd')
+    public function get($name, $default = null)
     {
         if (isset($this->data[$name])) {
             $results = $this->decodeData(
