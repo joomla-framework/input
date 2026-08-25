@@ -9,6 +9,8 @@
 
 namespace Joomla\Input;
 
+use Joomla\Filesystem\File;
+
 /**
  * Joomla! Input Files Class
  *
@@ -62,6 +64,15 @@ class Files extends Input
                     $this->data[$name]['size'],
                 ]
             );
+
+            // Prevent returning an unsafe file unless specifically requested
+            if (strtoupper($filter) !== 'RAW') {
+                $isSafe = File::isSafeFile($results);
+
+                if (!$isSafe) {
+                    return $default;
+                }
+            }
 
             return $results;
         }
