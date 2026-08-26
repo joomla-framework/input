@@ -68,9 +68,9 @@ class FilesTest extends TestCase
 
         $instance = new Files($data, ['filter' => $stubFilter]);
 
-        $this->assertEquals('foobar', $instance->get('myfile3', 'foobar'), 'The default value is returned if data does not exist.');
+        $this->assertSame('foobar', $instance->get('myfile3', 'foobar'), 'The default value is returned if data does not exist.');
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'name'     => 'n',
                 'type'     => 'ty',
@@ -100,7 +100,7 @@ class FilesTest extends TestCase
 
         $instance = new Files($data, ['filter' => $stubFilter]);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 [
                     'name'     => 'first',

@@ -157,7 +157,7 @@ class InputTest extends TestCase
 
         $instance = $this->getInputObject(['foo' => 'bar']);
 
-        $this->assertEquals('bar', $instance->get('foo'));
+        $this->assertSame('bar', $instance->get('foo'));
     }
 
     #[TestDox('A key is not redefined if already present')]
@@ -171,7 +171,7 @@ class InputTest extends TestCase
 
         $instance->def('foo', 'nope');
 
-        $this->assertEquals('bar', $instance->get('foo'));
+        $this->assertSame('bar', $instance->get('foo'));
     }
 
     #[TestDox('A key is defined when not present')]
@@ -185,7 +185,7 @@ class InputTest extends TestCase
 
         $instance->def('bar', 'nope');
 
-        $this->assertEquals('nope', $instance->get('bar'));
+        $this->assertSame('nope', $instance->get('bar'));
     }
 
     #[TestDox('A key is added or overwritten in the data source')]
@@ -199,7 +199,7 @@ class InputTest extends TestCase
 
         $instance->set('foo', 'gamma');
 
-        $this->assertEquals('gamma', $instance->get('foo'));
+        $this->assertSame('gamma', $instance->get('foo'));
     }
 
     #[TestDox("For a key's existence in the data source")]
@@ -226,7 +226,7 @@ class InputTest extends TestCase
 
         $input = $this->getInputObject($array);
 
-        $this->assertEquals(
+        $this->assertSame(
             $array,
             $input->getArray(
                 ['var1' => 'string', 'var2' => 'int', 'var3' => 'array', 'var4' => ['var1' => ['var2' => 'array']]]
@@ -252,7 +252,7 @@ class InputTest extends TestCase
 
         $input = $this->getInputObject($array);
 
-        $this->assertEquals($input->getArray(), $array);
+        $this->assertSame($input->getArray(), $array);
     }
 
     #[BackupGlobals(true)]
@@ -267,7 +267,7 @@ class InputTest extends TestCase
 
         $instance = $this->getInputObject();
 
-        $this->assertEquals('CUSTOM', $instance->getMethod());
+        $this->assertSame('CUSTOM', $instance->getMethod());
     }
 
     #[BackupGlobals(true)]
@@ -360,7 +360,7 @@ class InputTest extends TestCase
 
         $input = new Input($constructorArgs);
 
-        $this->assertEquals($expected, $input->get('var'));
+        $this->assertSame($expected, $input->get('var'));
     }
 
     #[BackupGlobals(true)]
