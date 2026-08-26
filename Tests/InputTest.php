@@ -373,7 +373,7 @@ class InputTest extends TestCase
 
         $input = new Input($_GET);
 
-        $this->assertEquals(0, $input->get->count(), 'get is being polluted by the post!');
+        $this->assertCount(0, $input->get, 'get is being polluted by the post!');
     }
 
     #[BackupGlobals(true)]
@@ -386,7 +386,7 @@ class InputTest extends TestCase
 
         $input = new Input($_POST);
 
-        $this->assertEquals(0, $input->post->count(), 'post is being polluted by the get!');
+        $this->assertCount(0, $input->post, 'post is being polluted by the get!');
     }
 
     #[BackupGlobals(true)]
@@ -399,14 +399,14 @@ class InputTest extends TestCase
 
         $input = new Input();
 
-        $this->assertEquals(
+        $this->assertCount(
             3,
-            $input->get->count(),
+            $input->get,
             'Wrong number of items found in the $_GET in the input object when loading from GLOBALS'
         );
-        $this->assertEquals(
+        $this->assertCount(
             2,
-            $input->post->count(),
+            $input->post,
             'Wrong number of items found in the $_POST in the input object when loading from GLOBALS'
         );
     }
