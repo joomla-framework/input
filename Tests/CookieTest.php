@@ -9,7 +9,11 @@ namespace Joomla\Input\Tests;
 
 use Joomla\Filter\InputFilter;
 use Joomla\Input\Cookie;
+use Joomla\Input\Input;
 use Joomla\Test\TestHelper;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\TestDox;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
 abstract class CookieDataStore
@@ -35,6 +39,8 @@ abstract class CookieDataStore
 /**
  * Test class for \Joomla\Input\Cookie.
  */
+#[CoversClass(Cookie::class)]
+#[UsesClass(Input::class)]
 class CookieTest extends TestCase
 {
     protected function setUp(): void
@@ -44,12 +50,7 @@ class CookieTest extends TestCase
         CookieDataStore::reset();
     }
 
-    /**
-     * @testdox  Tests the input creates itself properly
-     *
-     * @covers   Joomla\Input\Cookie
-     * @uses     Joomla\Input\Input
-     */
+    #[TestDox('Tests the input creates itself properly')]
     public function test__constructDefaultBehaviour()
     {
         $instance = new Cookie();
@@ -58,12 +59,7 @@ class CookieTest extends TestCase
         $this->assertInstanceOf(InputFilter::class, TestHelper::getValue($instance, 'filter'), 'The Input object should create an InputFilter if one is not provided');
     }
 
-    /**
-     * @testdox  Tests the constructor with injected data
-     *
-     * @covers   Joomla\Input\Cookie
-     * @uses     Joomla\Input\Input
-     */
+    #[TestDox('Tests the constructor with injected data')]
     public function test__constructDependencyInjection()
     {
         $src        = ['foo' => 'bar'];
@@ -75,12 +71,7 @@ class CookieTest extends TestCase
         $this->assertSame($stubFilter, TestHelper::getValue($instance, 'filter'));
     }
 
-    /**
-     * @testdox  Tests that data is correctly set
-     *
-     * @covers   Joomla\Input\Cookie
-     * @uses     Joomla\Input\Input
-     */
+    #[TestDox('Tests that data is correctly set')]
     public function testSetWithNewSignature()
     {
         $stubFilter = $this->createStub(InputFilter::class);

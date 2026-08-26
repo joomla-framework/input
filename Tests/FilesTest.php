@@ -9,20 +9,21 @@ namespace Joomla\Input\Tests;
 
 use Joomla\Filter\InputFilter;
 use Joomla\Input\Files;
+use Joomla\Input\Input;
 use Joomla\Test\TestHelper;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\TestDox;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for \Joomla\Input\Files.
  */
+#[CoversClass(Files::class)]
+#[UsesClass(Input::class)]
 class FilesTest extends TestCase
 {
-    /**
-     * @testdox  Tests the default constructor behavior
-     *
-     * @covers   Joomla\Input\Files
-     * @uses     Joomla\Input\Input
-     */
+    #[TestDox('Tests the default constructor behavior')]
     public function test__constructDefaultBehaviour()
     {
         $instance = new Files();
@@ -31,12 +32,7 @@ class FilesTest extends TestCase
         $this->assertInstanceOf(InputFilter::class, TestHelper::getValue($instance, 'filter'), 'The Input object should create an InputFilter if one is not provided');
     }
 
-    /**
-     * @testdox  Tests the constructor with injected data
-     *
-     * @covers   Joomla\Input\Files
-     * @uses     Joomla\Input\Input
-     */
+    #[TestDox('Tests the constructor with injected data')]
     public function test__constructDependencyInjection()
     {
         $src        = ['foo' => 'bar'];
@@ -48,12 +44,7 @@ class FilesTest extends TestCase
         $this->assertSame($stubFilter, TestHelper::getValue($instance, 'filter'));
     }
 
-    /**
-     * @testdox  Tests the data source is correctly read
-     *
-     * @covers   Joomla\Input\Files
-     * @uses     Joomla\Input\Input
-     */
+    #[TestDox('Tests the data source is correctly read')]
     public function testGet()
     {
         $data = [
@@ -91,12 +82,7 @@ class FilesTest extends TestCase
         );
     }
 
-    /**
-     * @testdox  Tests a multi-level data source is correctly read
-     *
-     * @covers   Joomla\Input\Files
-     * @uses     Joomla\Input\Input
-     */
+    #[TestDox('Tests a multi-level data source is correctly read')]
     public function testGetWithMultiLevelData()
     {
         $dataArr = ['first', 'second'];
@@ -135,12 +121,7 @@ class FilesTest extends TestCase
         );
     }
 
-    /**
-     * @testdox  Tests the data source cannot be modified
-     *
-     * @covers   Joomla\Input\Files
-     * @uses     Joomla\Input\Input
-     */
+    #[TestDox('Tests the data source cannot be modified')]
     public function testSet()
     {
         $instance = new Files();

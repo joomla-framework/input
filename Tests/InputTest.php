@@ -8,10 +8,15 @@
 namespace Joomla\Input\Tests;
 
 use Joomla\Filter\InputFilter;
+use Joomla\Input\Files;
 use Joomla\Input\Input;
 use Joomla\Test\TestHelper;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\BackupGlobals;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestDox;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Throwable;
@@ -20,6 +25,8 @@ use Throwable;
  * Test class for \Joomla\Input\Input.
  */
 #[AllowMockObjectsWithoutExpectations]
+#[CoversClass(Input::class)]
+#[UsesClass(Files::class)]
 class InputTest extends TestCase
 {
     /**
@@ -55,11 +62,9 @@ class InputTest extends TestCase
     }
 
     /**
-     * @testdox  Default constructor behavior
-     *
-     * @covers   \Joomla\Input\Input
      * @throws \ReflectionException
      */
+    #[TestDox('Default constructor behavior')]
     public function test__constructDefaultBehaviour(): void
     {
         $instance = new Input();
@@ -69,11 +74,9 @@ class InputTest extends TestCase
     }
 
     /**
-     * @testdox  Constructor with injected data
-     *
-     * @covers   \Joomla\Input\Input
      * @throws \ReflectionException
      */
+    #[TestDox('Constructor with injected data')]
     public function test__constructDependencyInjection(): void
     {
         $instance = $this->getInputObject($_GET);
@@ -82,11 +85,7 @@ class InputTest extends TestCase
         $this->assertSame($this->filterMock, TestHelper::getValue($instance, 'filter'));
     }
 
-    /**
-     * @testdox  Convenience methods are proxied
-     *
-     * @covers   \Joomla\Input\Input
-     */
+    #[TestDox('Convenience methods are proxied')]
     public function test__callProxiesToTheGetMethod(): void
     {
         $this->filterMock->expects($this->once())
@@ -98,11 +97,7 @@ class InputTest extends TestCase
         $this->assertSame('bar', $instance->getRaw('foo'));
     }
 
-    /**
-     * @testdox  An error is thrown if an undefined method is called
-     *
-     * @covers   \Joomla\Input\Input
-     */
+    #[TestDox('An error is thrown if an undefined method is called')]
     public function test__callThrowsAnErrorIfAnUndefinedMethodIsCalled(): void
     {
         $this->expectException(Throwable::class);
@@ -111,11 +106,9 @@ class InputTest extends TestCase
     }
 
     /**
-     * @testdox   Magic get method correctly proxies to another global
-     *
-     * @covers    \Joomla\Input\Input
      * @throws \ReflectionException
      */
+    #[TestDox('Magic get method correctly proxies to another global')]
     public function test__get(): void
     {
         $instance = $this->getInputObject();
@@ -124,11 +117,7 @@ class InputTest extends TestCase
         $this->assertArrayHasKey('get', TestHelper::getValue($instance, 'inputs'), 'An object retrieved via __get() should be cached internally');
     }
 
-    /**
-     * @testdox   Magic get method correctly proxies to another global represented by the Input class and returns the same instance
-     *
-     * @covers   \Joomla\Input\Input
-     */
+    #[TestDox('Magic get method correctly proxies to another global represented by the Input class and returns the same instance')]
     public function test__getCachedInstances(): void
     {
         $instance = $this->getInputObject();
@@ -136,12 +125,7 @@ class InputTest extends TestCase
         $this->assertSame($instance->get, $instance->get, 'The same Input instance should be returned');
     }
 
-    /**
-     * @testdox   Magic get method correctly proxies to another global represented by an Input subclass and returns the same instance
-     *
-     * @covers   \Joomla\Input\Input
-     * @uses     \Joomla\Input\Files
-     */
+    #[TestDox('Magic get method correctly proxies to another global represented by an Input subclass and returns the same instance')]
     public function test__getCachedInstancesSubclasses(): void
     {
         $instance = $this->getInputObject();
@@ -149,11 +133,7 @@ class InputTest extends TestCase
         $this->assertSame($instance->files, $instance->files, 'The same Files instance should be returned');
     }
 
-    /**
-     * @testdox   An error is thrown if an undefined property is called
-     *
-     * @covers   \Joomla\Input\Input
-     */
+    #[TestDox('An error is thrown if an undefined property is called')]
     public function test__getThrowsAnErrorIfAnUndefinedPropertyIsCalled(): void
     {
         $this->expectException(Throwable::class);
@@ -162,21 +142,13 @@ class InputTest extends TestCase
         $this->getInputObject()->put;
     }
 
-    /**
-     * @testdox   Data store is counted
-     *
-     * @covers   \Joomla\Input\Input
-     */
+    #[TestDox('Data store is counted')]
     public function testCount(): void
     {
         $this->assertCount(3, $this->getInputObject(['foo' => 2, 'bar' => 3, 'gamma' => 4]));
     }
 
-    /**
-     * @testdox  Data source is correctly read
-     *
-     * @covers   \Joomla\Input\Input
-     */
+    #[TestDox('Data source is correctly read')]
     public function testGet(): void
     {
         $this->filterMock->expects($this->once())
@@ -188,11 +160,7 @@ class InputTest extends TestCase
         $this->assertEquals('bar', $instance->get('foo'));
     }
 
-    /**
-     * @testdox  A key is not redefined if already present
-     *
-     * @covers   \Joomla\Input\Input
-     */
+    #[TestDox('A key is not redefined if already present')]
     public function testDefNotReadWhenValueExists(): void
     {
         $this->filterMock->expects($this->once())
@@ -206,11 +174,7 @@ class InputTest extends TestCase
         $this->assertEquals('bar', $instance->get('foo'));
     }
 
-    /**
-     * @testdox  A key is defined when not present
-     *
-     * @covers   \Joomla\Input\Input
-     */
+    #[TestDox('A key is defined when not present')]
     public function testDefRead(): void
     {
         $this->filterMock->expects($this->once())
@@ -224,11 +188,7 @@ class InputTest extends TestCase
         $this->assertEquals('nope', $instance->get('bar'));
     }
 
-    /**
-     * @testdox  A key is added or overwritten in the data source
-     *
-     * @covers   \Joomla\Input\Input
-     */
+    #[TestDox('A key is added or overwritten in the data source')]
     public function testSet(): void
     {
         $this->filterMock->expects($this->once())
@@ -242,11 +202,7 @@ class InputTest extends TestCase
         $this->assertEquals('gamma', $instance->get('foo'));
     }
 
-    /**
-     * @testdox  For a key's existence in the data source
-     *
-     * @covers   \Joomla\Input\Input
-     */
+    #[TestDox("For a key's existence in the data source")]
     public function testExists(): void
     {
         $instance = $this->getInputObject(['foo' => 'bar']);
@@ -254,11 +210,7 @@ class InputTest extends TestCase
         $this->assertTrue($instance->exists('foo'));
     }
 
-    /**
-     * @testdox  An array of keys is read from the data source
-     *
-     * @covers   \Joomla\Input\Input
-     */
+    #[TestDox('An array of keys is read from the data source')]
     public function testGetArray(): void
     {
         $this->filterMock
@@ -282,11 +234,7 @@ class InputTest extends TestCase
         );
     }
 
-    /**
-     * @testdox  Full data array is read from the data source
-     *
-     * @covers   \Joomla\Input\Input
-     */
+    #[TestDox('Full data array is read from the data source')]
     public function testGetArrayWithoutSpecifiedVariables(): void
     {
         $this->filterMock
@@ -307,13 +255,8 @@ class InputTest extends TestCase
         $this->assertEquals($input->getArray(), $array);
     }
 
-    /**
-     * @testdox  Request method is returned
-     *
-     * @covers   \Joomla\Input\Input
-     *
-     * @backupGlobals enabled
-     */
+    #[BackupGlobals(true)]
+    #[TestDox('Request method is returned')]
     public function testGetMethod(): void
     {
         $this->filterMock
@@ -327,13 +270,8 @@ class InputTest extends TestCase
         $this->assertEquals('CUSTOM', $instance->getMethod());
     }
 
-    /**
-     * @testdox  Input object for the request method is returned on a GET request
-     *
-     * @covers   \Joomla\Input\Input
-     *
-     * @backupGlobals enabled
-     */
+    #[BackupGlobals(true)]
+    #[TestDox('Input object for the request method is returned on a GET request')]
     public function testGetInputForRequestMethodWithGetRequest(): void
     {
         $this->filterMock
@@ -348,13 +286,8 @@ class InputTest extends TestCase
         $this->assertSame($instance->get, $instance->getInputForRequestMethod(), 'A request method that does have its own superglobal returns the Input object for that global');
     }
 
-    /**
-     * @testdox  Input object for the request method is returned on a POST request
-     *
-     * @covers   \Joomla\Input\Input
-     *
-     * @backupGlobals enabled
-     */
+    #[BackupGlobals(true)]
+    #[TestDox('Input object for the request method is returned on a POST request')]
     public function testGetInputForRequestMethodWithPostRequest(): void
     {
         $this->filterMock
@@ -369,13 +302,8 @@ class InputTest extends TestCase
         $this->assertSame($instance->post, $instance->getInputForRequestMethod(), 'A request method that does have its own superglobal returns the Input object for that global');
     }
 
-    /**
-     * @testdox  Input object for the request method is returned on a PUT request
-     *
-     * @covers   \Joomla\Input\Input
-     *
-     * @backupGlobals enabled
-     */
+    #[BackupGlobals(true)]
+    #[TestDox('Input object for the request method is returned on a PUT request')]
     public function testGetInputForRequestMethodWithPutRequest(): void
     {
         $this->filterMock
@@ -390,11 +318,7 @@ class InputTest extends TestCase
         $this->assertSame($instance, $instance->getInputForRequestMethod(), 'A request method that does not have its own superglobal returns the current Input object');
     }
 
-    /**
-     * @testdox  Get method disallows access to non-whitelisted globals
-     *
-     * @covers   \Joomla\Input\Input
-     */
+    #[TestDox('Get method disallows access to non-whitelisted globals')]
     public function testGetDoesNotSupportNonWhitelistedGlobals(): void
     {
         $this->expectException(Throwable::class);
@@ -420,18 +344,16 @@ class InputTest extends TestCase
             'same key' => [
                 'constructorArgs' => ['var' => 'bar'],
                 'expected'        => 'bar',
-            ]
+            ],
         ];
     }
 
     /**
-     * @testdox If no source is provided ($source === null), $_REQUEST is used. If any source is provided ($source !== null), $_REQUEST is ignored.
-     *
      * @return void
-     *
-     * @backupGlobals enabled
      */
+    #[BackupGlobals(true)]
     #[DataProvider('constructorCasesProvider')]
+    #[TestDox('If no source is provided ($source === null), $_REQUEST is used. If any source is provided ($source !== null), $_REQUEST is ignored.')]
     public function testConstructorUsesRequestIfNeeded($constructorArgs, $expected): void
     {
         $_REQUEST = ['var' => 'value'];
@@ -441,13 +363,8 @@ class InputTest extends TestCase
         $this->assertEquals($expected, $input->get('var'));
     }
 
-    /**
-     * @testdox   Input object for the request method GET is not polluted with POST data
-     *
-     * @covers    \Joomla\Input\Input
-     *
-     * @backupGlobals enabled
-     */
+    #[BackupGlobals(true)]
+    #[TestDox('Input object for the request method GET is not polluted with POST data')]
     public function testGetRequestForPostData(): void
     {
         $_POST    = ['polluted' => '1'];
@@ -459,13 +376,8 @@ class InputTest extends TestCase
         $this->assertEquals(0, $input->get->count(), 'get is being polluted by the post!');
     }
 
-    /**
-     * @testdox  Input object for the request method POST is not polluted with GET data
-     *
-     * @covers   \Joomla\Input\Input
-     *
-     * @backupGlobals enabled
-     */
+    #[BackupGlobals(true)]
+    #[TestDox('Input object for the request method POST is not polluted with GET data')]
     public function testPostRequestForGetData(): void
     {
         $_GET     = ['polluted' => '1'];
@@ -477,13 +389,8 @@ class InputTest extends TestCase
         $this->assertEquals(0, $input->post->count(), 'post is being polluted by the get!');
     }
 
-    /**
-     * @testdox  GET and POST data are kept separate
-     *
-     * @covers   \Joomla\Input\Input
-     *
-     * @backupGlobals enabled
-     */
+    #[BackupGlobals(true)]
+    #[TestDox('GET and POST data are kept separate')]
     public function testRequestFromGlobals(): void
     {
         $_GET     = ['1' => '1', '2' => '2', '3' => '3'];

@@ -8,21 +8,23 @@
 namespace Joomla\Input\Tests;
 
 use Joomla\Filter\InputFilter;
+use Joomla\Input\Input;
 use Joomla\Input\Json;
 use Joomla\Test\TestHelper;
+use PHPUnit\Framework\Attributes\BackupGlobals;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\TestDox;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for \Joomla\Input\Json.
  */
+#[CoversClass(Json::class)]
+#[UsesClass(Input::class)]
 class JsonTest extends TestCase
 {
-    /**
-     * @testdox  Tests the default constructor behavior
-     *
-     * @covers   Joomla\Input\Json
-     * @uses     Joomla\Input\Input
-     */
+    #[TestDox('Tests the default constructor behavior')]
     public function test__constructDefaultBehaviour()
     {
         $instance = new Json();
@@ -31,12 +33,7 @@ class JsonTest extends TestCase
         $this->assertInstanceOf(InputFilter::class, TestHelper::getValue($instance, 'filter'), 'The Input object should create an InputFilter if one is not provided');
     }
 
-    /**
-     * @testdox  Tests the constructor with injected data
-     *
-     * @covers   Joomla\Input\Json
-     * @uses     Joomla\Input\Input
-     */
+    #[TestDox('Tests the constructor with injected data')]
     public function test__constructDependencyInjection()
     {
         $src        = ['foo' => 'bar'];
@@ -48,14 +45,8 @@ class JsonTest extends TestCase
         $this->assertSame($stubFilter, TestHelper::getValue($instance, 'filter'));
     }
 
-    /**
-     * @testdox  Tests the constructor when reading data from the $GLOBALS
-     *
-     * @covers   Joomla\Input\Json
-     * @uses     Joomla\Input\Input
-     *
-     * @backupGlobals enabled
-     */
+    #[BackupGlobals(true)]
+    #[TestDox('Tests the constructor when reading data from the $GLOBALS')]
     public function test__constructReadingFromGlobals()
     {
         $GLOBALS['HTTP_RAW_POST_DATA'] = '{"a":1,"b":2}';
@@ -66,14 +57,8 @@ class JsonTest extends TestCase
         $this->assertInstanceOf(InputFilter::class, TestHelper::getValue($instance, 'filter'), 'The Input object should create an InputFilter if one is not provided');
     }
 
-    /**
-     * @testdox  Tests the constructor when reading data from the $GLOBALS
-     *
-     * @covers   Joomla\Input\Json
-     * @uses     Joomla\Input\Input
-     *
-     * @backupGlobals enabled
-     */
+    #[BackupGlobals(true)]
+    #[TestDox('Tests the constructor when reading data from the $GLOBALS')]
     public function testgetRaw()
     {
         $GLOBALS['HTTP_RAW_POST_DATA'] = '{"a":1,"b":2}';
