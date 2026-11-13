@@ -35,3 +35,27 @@ What to check:
 * Names are `string`. Integer keys still work, as PHP converts them in non-strict mode.
 
 `set()` keeps an untyped return value because `Cookie::set()` returns whether the cookie was sent.
+
+## Secure cookie defaults
+
+`Cookie::set()` used to hand its options to `setcookie()` unchanged, so a cookie was written
+without `HttpOnly`, `SameSite` and `Secure` unless the caller passed them. Options that are not
+passed now default to:
+
+| Option | v4 | v5 |
+|---|---|---|
+| `httponly` | `false` | `true` |
+| `samesite` | not set | `Lax` |
+| `secure` | `false` | `true` if `$_SERVER['HTTPS']` is set and not `off` |
+
+The signature is `set(string $name, mixed $value, array $options = []): bool`: it returns whether
+the cookie was sent and only stores the value in the object if it was.
+
+What to check:
+
+* Cookies that JavaScript reads need `'httponly' => false`.
+* Cookies that must be sent on cross-site requests (e.g. embedded in another site, or a
+  cross-site `POST` back to you such as a payment provider's callback) need `'samesite' => 'None'`,
+  which browsers only accept together with `'secure' => true`.
+* Behind a proxy that terminates TLS, `$_SERVER['HTTPS']` is usually not set; pass `secure`
+  explicitly there.

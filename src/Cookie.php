@@ -38,23 +38,42 @@ class Cookie extends Input
      * @param array    $options     An associative array which may have any of the keys expires, path, domain,
      *                              secure, httponly and samesite. The values have the same meaning as described
      *                              for the parameters with the same name. The value of the samesite element
-     *                              should be either Lax or Strict. If any of the allowed options are not given,
-     *                              their default values are the same as the default values of the explicit
-     *                              parameters. If the samesite element is omitted, no SameSite cookie attribute
-     *                              is set.
+     *                              should be None, Lax or Strict. Options not given default to httponly = true,
+     *                              samesite = Lax and secure = true if the current request uses HTTPS; the other
+     *                              options default to the defaults of setcookie().
      *
-     * @return  void
+     * @return  boolean  True if the cookie was sent, false if it could not be (e.g. headers already sent).
      *
      * @link    https://www.ietf.org/rfc/rfc2109.txt
      * @link    https://php.net/manual/en/function.setcookie.php
      *
      * @since   1.0
      */
-    public function set(string $name, mixed $value, array $options = [])
+    public function set(string $name, mixed $value, array $options = []): bool
     {
+        $options += ['httponly' => true, 'samesite' => 'Lax', 'secure' => $this->isHttps()];
+
         // Set the cookie
-        setcookie($name, $value, $options);
+        if (!setcookie($name, $value, $options)) {
+            return false;
+        }
 
         $this->data[$name] = $value;
+
+        return true;
+    }
+
+    /**
+     * Checks whether the current request uses HTTPS.
+     *
+     * Proxy headers such as X-Forwarded-Proto are not trusted.
+     *
+     * @return  boolean
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function isHttps(): bool
+    {
+        return !empty($_SERVER['HTTPS']) && strtolower((string) $_SERVER['HTTPS']) !== 'off';
     }
 }

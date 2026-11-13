@@ -118,11 +118,14 @@ $cookies->set('lang', 'de', [
 ]);
 ```
 
-The options array is handed straight to `setcookie()`. Nothing is added, so **omitting `secure`,
-`httponly` or `samesite` means the cookie is written without them**. Always pass them explicitly.
+Options that are not passed get secure defaults: `httponly` is `true`, `samesite` is `Lax`, and
+`secure` is `true` when the current request uses HTTPS (`$_SERVER['HTTPS']`; proxy headers such
+as `X-Forwarded-Proto` are not trusted, so behind a TLS-terminating proxy pass `secure` yourself).
+Pass `'httponly' => false` for a cookie that JavaScript must read, and `'samesite' => 'None'`
+(which requires `secure`) for one that must be sent on cross-site requests.
 
-The return value of `setcookie()` is discarded, so a failed call — headers already sent, invalid
-name — still updates the object's own data and reports nothing.
+`set()` returns the result of `setcookie()`. If the cookie could not be sent — headers already
+sent, invalid name — it returns `false` and the object's own data is left unchanged.
 
 ## Uploaded files
 
