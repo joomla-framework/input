@@ -151,12 +151,17 @@ use Joomla\Input\Json;
 $json = new Json();
 
 $json->getString('title');
-$json->getRaw();              // the undecoded body
+$json->getRaw('title');       // unfiltered value, like on every other input
+$json->getRawBody();          // the undecoded body
 ```
+
+`getRawBody()` returns `null` if the data was passed to the constructor instead of read from the
+request. Calling `getRaw()` without a name still returns the body, but is deprecated: in 5.0 it
+behaves like `getRaw()` on every other input.
 
 The body is read and decoded on construction regardless of the request's `Content-Type`. A body
 that is not valid JSON yields an empty input rather than an error, so an API cannot distinguish
-"malformed JSON" from "no fields sent" — check `getRaw()` if that matters.
+"malformed JSON" from "no fields sent" — check `getRawBody()` if that matters.
 
 ## Not part of this package
 
