@@ -10,6 +10,7 @@ namespace Joomla\Input\Tests;
 use Joomla\Filter\InputFilter;
 use Joomla\Input\Json;
 use Joomla\Test\TestHelper;
+use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -74,10 +75,20 @@ class JsonTest extends TestCase
      *
      * @backupGlobals enabled
      */
-    public function testgetRaw()
+    public function testGetRawBody()
     {
         $GLOBALS['HTTP_RAW_POST_DATA'] = '{"a":1,"b":2}';
 
-        $this->assertSame($GLOBALS['HTTP_RAW_POST_DATA'], (new Json())->getRaw());
+        $this->assertSame($GLOBALS['HTTP_RAW_POST_DATA'], (new Json())->getRawBody());
+    }
+
+    #[TestDox('getRaw() returns an unfiltered value like on every other input')]
+    public function testGetRaw(): void
+    {
+        $instance = new Json(['field' => '<b>value</b>']);
+
+        $this->assertSame('<b>value</b>', $instance->getRaw('field'));
+        $this->assertSame('default', $instance->getRaw('missing', 'default'));
+        $this->assertNull($instance->getRawBody());
     }
 }

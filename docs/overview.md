@@ -151,12 +151,13 @@ use Joomla\Input\Json;
 $json = new Json();
 
 $json->getString('title');
-$json->getRaw();              // the undecoded body
+$json->getRaw('title');       // unfiltered value, like on every other input
+$json->getRawBody();          // the undecoded body, null if the data was passed to the constructor
 ```
 
 The body is read and decoded on construction regardless of the request's `Content-Type`. A body
 that is not valid JSON yields an empty input rather than an error, so an API cannot distinguish
-"malformed JSON" from "no fields sent" — check `getRaw()` if that matters.
+"malformed JSON" from "no fields sent" — check `getRawBody()` if that matters.
 
 ## Not part of this package
 
