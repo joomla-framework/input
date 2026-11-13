@@ -46,6 +46,8 @@ The `get<Type>()` shorthands are resolved through `__call()`, so the type name i
 Anything else — `getFoobar()` — silently falls back to string filtering rather than raising an
 error, so a typo in the method name returns a value instead of failing.
 
+The name is required: `getInt()` without arguments throws an `ArgumentCountError`.
+
 ## The sub-inputs
 
 Magic properties give access to the other superglobals, each wrapped in its own `Input`:
