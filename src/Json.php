@@ -21,7 +21,7 @@ class Json extends Input
     /**
      * The raw JSON string from the request.
      *
-     * @var    string
+     * @var    string|null
      * @since  1.0
      */
     private $raw;
@@ -58,11 +58,11 @@ class Json extends Input
     /**
      * Gets the raw JSON string from the request.
      *
-     * @return  string  The raw JSON string from the request.
+     * @return  string|null  The raw JSON string from the request, or null if the data was passed to the constructor.
      *
-     * @since   1.0
+     * @since   __DEPLOY_VERSION__
      */
-    public function getRaw()
+    public function getRawBody(): ?string
     {
         return $this->raw;
     }
