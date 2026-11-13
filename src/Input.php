@@ -58,7 +58,7 @@ class Input implements \Countable
      * @var    array
      * @since  1.0
      */
-    protected $options = [];
+    protected array $options = [];
 
     /**
      * Filter object to use.
@@ -66,7 +66,7 @@ class Input implements \Countable
      * @var    Filter\InputFilter
      * @since  1.0
      */
-    protected $filter;
+    protected Filter\InputFilter $filter;
 
     /**
      * Input data.
@@ -74,7 +74,7 @@ class Input implements \Countable
      * @var    array
      * @since  1.0
      */
-    protected $data = [];
+    protected array $data = [];
 
     /**
      * Input objects
@@ -82,7 +82,7 @@ class Input implements \Countable
      * @var    Input[]
      * @since  1.0
      */
-    protected $inputs = [];
+    protected array $inputs = [];
 
     /**
      * Constructor.
@@ -93,7 +93,7 @@ class Input implements \Countable
      *
      * @since   1.0
      */
-    public function __construct($source = null, array $options = [])
+    public function __construct(?array $source = null, array $options = [])
     {
         $this->data    = $source ?? $_REQUEST;
         $this->filter  = $options['filter'] ?? new Filter\InputFilter();
@@ -103,14 +103,14 @@ class Input implements \Countable
     /**
      * Magic method to get an input object
      *
-     * @param   mixed  $name  Name of the input object to retrieve.
+     * @param   string  $name  Name of the input object to retrieve.
      *
      * @return  Input  The request input object
      *
      * @throws  Exception
      * @since   1.0
      */
-    public function __get($name)
+    public function __get(string $name): Input
     {
         if (isset($this->inputs[$name])) {
             return $this->inputs[$name];
@@ -143,8 +143,7 @@ class Input implements \Countable
      * @since   1.0
      * @see     Countable::count()
      */
-    #[\ReturnTypeWillChange]
-    public function count()
+    public function count(): int
     {
         return \count($this->data);
     }
@@ -161,7 +160,7 @@ class Input implements \Countable
      * @see     \Joomla\Filter\InputFilter::clean()
      * @since   1.0
      */
-    public function get($name, $default = null, $filter = 'cmd')
+    public function get(string $name, mixed $default = null, $filter = 'cmd'): mixed
     {
         if ($this->exists($name)) {
             return $this->filter->clean($this->data[$name], $filter);
@@ -178,11 +177,11 @@ class Input implements \Countable
      *                              but filtered using the default case in InputFilter::clean.
      * @param   mixed  $datasource  Array to retrieve data from, or null
      *
-     * @return  mixed  The filtered input data.
+     * @return  array  The filtered input data.
      *
      * @since   1.0
      */
-    public function getArray(array $vars = [], $datasource = null)
+    public function getArray(array $vars = [], mixed $datasource = null): array
     {
         if (empty($vars) && $datasource === null) {
             $vars = $this->data;
@@ -218,7 +217,7 @@ class Input implements \Countable
      *
      * @since   1.3.0
      */
-    public function getInputForRequestMethod()
+    public function getInputForRequestMethod(): Input
     {
         switch (strtoupper($this->getMethod())) {
             case 'GET':
@@ -243,7 +242,7 @@ class Input implements \Countable
      *
      * @since   1.0
      */
-    public function set($name, $value)
+    public function set(string $name, mixed $value)
     {
         $this->data[$name] = $value;
     }
@@ -258,7 +257,7 @@ class Input implements \Countable
      *
      * @since   1.0
      */
-    public function def($name, $value)
+    public function def(string $name, mixed $value): void
     {
         if (isset($this->data[$name])) {
             return;
@@ -276,7 +275,7 @@ class Input implements \Countable
      *
      * @since   1.2.0
      */
-    public function exists($name)
+    public function exists(string $name): bool
     {
         return isset($this->data[$name]);
     }
@@ -292,7 +291,7 @@ class Input implements \Countable
      * @throws  Exception
      * @since   1.0
      */
-    public function __call($name, $arguments)
+    public function __call(string $name, array $arguments): mixed
     {
         if (substr($name, 0, 3) == 'get') {
             $filter = substr($name, 3);
@@ -316,7 +315,7 @@ class Input implements \Countable
      *
      * @since   1.0
      */
-    public function getMethod()
+    public function getMethod(): string
     {
         return strtoupper($this->server->getCmd('REQUEST_METHOD'));
     }
