@@ -20,7 +20,9 @@ class Cookie extends Input
      * Constructor.
      *
      * @param   array|null  $source   Source data (Optional, default is $_COOKIE)
-     * @param   array       $options  Array of configuration parameters (Optional)
+     * @param   array       $options  Array of configuration parameters (Optional). Besides the options of Input:
+     *                                cookie_options: Default options for set(), e.g. ['secure' => true,
+     *                                'httponly' => true, 'samesite' => 'Lax']. Options passed to set() override them.
      *
      * @since   1.0
      */
@@ -41,9 +43,10 @@ class Cookie extends Input
      *                              should be either Lax or Strict. If any of the allowed options are not given,
      *                              their default values are the same as the default values of the explicit
      *                              parameters. If the samesite element is omitted, no SameSite cookie attribute
-     *                              is set.
+     *                              is set. Options not given are taken from the cookie_options configuration
+     *                              option, if set.
      *
-     * @return  void
+     * @return  boolean  True if the cookie was sent, false if it could not be (e.g. headers already sent).
      *
      * @link    https://www.ietf.org/rfc/rfc2109.txt
      * @link    https://php.net/manual/en/function.setcookie.php
@@ -52,9 +55,17 @@ class Cookie extends Input
      */
     public function set($name, $value, $options = [])
     {
+        if (isset($this->options['cookie_options']) && \is_array($this->options['cookie_options'])) {
+            $options += $this->options['cookie_options'];
+        }
+
         // Set the cookie
-        setcookie($name, $value, $options);
+        if (!setcookie($name, $value, $options)) {
+            return false;
+        }
 
         $this->data[$name] = $value;
+
+        return true;
     }
 }

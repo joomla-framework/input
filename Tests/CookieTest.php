@@ -9,16 +9,24 @@ namespace Joomla\Input\Tests;
 
 use Joomla\Filter\InputFilter;
 use Joomla\Input\Cookie;
+use Joomla\Input\Input;
 use Joomla\Test\TestHelper;
+use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 abstract class CookieDataStore
 {
     private static $store = [];
 
+    public static $options = [];
+
+    public static $result = true;
+
     public static function reset(): void
     {
-        self::$store = [];
+        self::$store   = [];
+        self::$options = [];
+        self::$result  = true;
     }
 
     public static function has(string $key): bool
@@ -90,6 +98,43 @@ class CookieTest extends TestCase
 
         $this->assertTrue(CookieDataStore::has('foo'));
     }
+
+    #[TestDox('Configured default options are merged under the options passed to set()')]
+    public function testSetMergesConfiguredDefaults(): void
+    {
+        $instance = new Cookie(
+            [],
+            ['cookie_options' => ['secure' => true, 'httponly' => true, 'samesite' => 'Lax', 'path' => '/']]
+        );
+
+        $this->assertTrue($instance->set('foo', 'bar', ['samesite' => 'Strict', 'expires' => 15]));
+        $this->assertSame(
+            ['samesite' => 'Strict', 'expires' => 15, 'secure' => true, 'httponly' => true, 'path' => '/'],
+            CookieDataStore::$options['foo']
+        );
+        $this->assertSame('bar', $instance->get('foo'));
+    }
+
+    #[TestDox('Configured default options reach the cookie input of an Input object')]
+    public function testConfiguredDefaultsAreInheritedFromInput(): void
+    {
+        $input = new Input([], ['cookie_options' => ['httponly' => true]]);
+
+        $input->cookie->set('foo', 'bar');
+
+        $this->assertSame(['httponly' => true], CookieDataStore::$options['foo']);
+    }
+
+    #[TestDox('A cookie that could not be sent is not stored and set() returns false')]
+    public function testSetFailure(): void
+    {
+        CookieDataStore::$result = false;
+
+        $instance = new Cookie([]);
+
+        $this->assertFalse($instance->set('foo', 'bar'));
+        $this->assertFalse($instance->exists('foo'));
+    }
 }
 
 // Stub for setcookie
@@ -100,7 +145,12 @@ use Joomla\Input\Tests\CookieDataStore;
 
 function setcookie($name, $value, $options = [])
 {
+    if (!CookieDataStore::$result) {
+        return false;
+    }
+
     CookieDataStore::set($name, $value);
+    CookieDataStore::$options[$name] = $options;
 
     return true;
 }

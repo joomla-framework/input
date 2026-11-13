@@ -118,11 +118,24 @@ $cookies->set('lang', 'de', [
 ]);
 ```
 
-The options array is handed straight to `setcookie()`. Nothing is added, so **omitting `secure`,
-`httponly` or `samesite` means the cookie is written without them**. Always pass them explicitly.
+The options array is handed to `setcookie()`. By default nothing is added, so **omitting `secure`,
+`httponly` or `samesite` means the cookie is written without them**. Either pass them on every call
+or configure defaults once with the `cookie_options` option. Options passed to `set()` take
+precedence over the defaults. The option is handed on to the sub-inputs, so it can be set on the
+application's `Input`:
 
-The return value of `setcookie()` is discarded, so a failed call — headers already sent, invalid
-name — still updates the object's own data and reports nothing.
+```php
+use Joomla\Input\Input;
+
+$input = new Input(null, [
+    'cookie_options' => ['secure' => true, 'httponly' => true, 'samesite' => 'Lax', 'path' => '/'],
+]);
+
+$input->cookie->set('lang', 'de', ['expires' => time() + 86400]);   // secure, httponly, Lax, path /
+```
+
+`set()` returns the result of `setcookie()`. If the cookie could not be sent — headers already
+sent, invalid name — it returns `false` and the object's own data is left unchanged.
 
 ## Uploaded files
 
