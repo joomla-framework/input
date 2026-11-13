@@ -10,6 +10,7 @@ namespace Joomla\Input\Tests;
 use Joomla\Filter\InputFilter;
 use Joomla\Input\Files;
 use Joomla\Test\TestHelper;
+use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -135,17 +136,27 @@ class FilesTest extends TestCase
         );
     }
 
-    /**
-     * @testdox  Tests the data source cannot be modified
-     *
-     * @covers   Joomla\Input\Files
-     * @uses     Joomla\Input\Input
-     */
-    public function testSet()
+    #[TestDox('The data source cannot be modified through set()')]
+    public function testSet(): void
     {
-        $instance = new Files();
-        $instance->set('foo', 'bar');
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Joomla\Input\Files::set() is not supported, uploaded files cannot be changed.');
 
-        $this->assertFalse($instance->exists('foo'));
+        (new Files([]))->set('foo', 'bar');
+    }
+
+    #[TestDox('The data source cannot be modified through def()')]
+    public function testDef(): void
+    {
+        $instance = new Files([]);
+
+        try {
+            $instance->def('fake', ['name' => 'f', 'type' => 't', 'tmp_name' => '/etc/passwd', 'error' => 0, 'size' => 1]);
+            $this->fail('def() should throw a LogicException');
+        } catch (\LogicException $e) {
+            $this->assertSame('Joomla\Input\Files::def() is not supported, uploaded files cannot be changed.', $e->getMessage());
+        }
+
+        $this->assertFalse($instance->exists('fake'));
     }
 }
