@@ -290,11 +290,18 @@ class Input implements \Countable
      * @return  mixed   The filtered input value.
      *
      * @throws  Exception
+     * @throws  \ArgumentCountError  If the name of the value is missing.
      * @since   1.0
      */
     public function __call($name, $arguments)
     {
         if (substr($name, 0, 3) == 'get') {
+            if (!\array_key_exists(0, $arguments)) {
+                throw new \ArgumentCountError(
+                    \sprintf('Too few arguments to %s::%s(), the name of the value to get is missing.', static::class, $name)
+                );
+            }
+
             $filter = substr($name, 3);
 
             $default = null;

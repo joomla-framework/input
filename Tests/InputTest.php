@@ -11,6 +11,7 @@ use Joomla\Filter\InputFilter;
 use Joomla\Input\Input;
 use Joomla\Test\TestHelper;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Throwable;
@@ -106,6 +107,15 @@ class InputTest extends TestCase
         $this->expectException(Throwable::class);
 
         $this->getInputObject()->setRaw();
+    }
+
+    #[TestDox('An error is thrown if a convenience method is called without a name')]
+    public function test__callThrowsAnErrorIfTheNameIsMissing(): void
+    {
+        $this->expectException(\ArgumentCountError::class);
+        $this->expectExceptionMessage('Too few arguments to Joomla\Input\Input::getInt(), the name of the value to get is missing.');
+
+        $this->getInputObject(['foo' => '1'])->getInt();
     }
 
     /**
