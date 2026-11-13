@@ -10,6 +10,7 @@ namespace Joomla\Input\Tests;
 use Joomla\Filter\InputFilter;
 use Joomla\Input\Json;
 use Joomla\Test\TestHelper;
+use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -79,5 +80,32 @@ class JsonTest extends TestCase
         $GLOBALS['HTTP_RAW_POST_DATA'] = '{"a":1,"b":2}';
 
         $this->assertSame($GLOBALS['HTTP_RAW_POST_DATA'], (new Json())->getRaw());
+    }
+
+    #[TestDox('getRaw() with a name returns the unfiltered value')]
+    public function testGetRawWithName(): void
+    {
+        $instance = new Json(['field' => '<b>value</b>', 'list' => [1, 2]]);
+
+        $this->assertSame('<b>value</b>', $instance->getRaw('field'));
+        $this->assertSame([1, 2], $instance->getRaw('list'));
+        $this->assertSame('default', $instance->getRaw('missing', 'default'));
+    }
+
+    #[TestDox('getRaw() without a name is deprecated')]
+    public function testGetRawWithoutNameIsDeprecated(): void
+    {
+        $this->expectUserDeprecationMessage(
+            'Since joomla/input __DEPLOY_VERSION__: Calling Joomla\Input\Json::getRaw() without a name to get the request body is deprecated'
+            . ' and will get an unfiltered value in 5.0. Use Joomla\Input\Json::getRawBody() instead.'
+        );
+
+        $this->assertNull((new Json(['field' => 'value']))->getRaw());
+    }
+
+    #[TestDox('getRawBody() returns null if the data was passed to the constructor')]
+    public function testGetRawBodyWithSource(): void
+    {
+        $this->assertNull((new Json(['field' => 'value']))->getRawBody());
     }
 }

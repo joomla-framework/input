@@ -21,7 +21,7 @@ class Json extends Input
     /**
      * The raw JSON string from the request.
      *
-     * @var    string
+     * @var    string|null
      * @since  1.0
      */
     private $raw;
@@ -56,13 +56,43 @@ class Json extends Input
     }
 
     /**
-     * Gets the raw JSON string from the request.
+     * Gets an unfiltered value, or the raw JSON string from the request when called without a name.
      *
-     * @return  string  The raw JSON string from the request.
+     * Calling this method without a name is deprecated, use getRawBody() instead.
+     *
+     * @param   string|null  $name     Name of the value to get.
+     * @param   mixed        $default  Default value to return if the variable does not exist.
+     *
+     * @return  mixed  The unfiltered value, or the raw JSON string from the request when no name is given.
      *
      * @since   1.0
      */
-    public function getRaw()
+    public function getRaw(?string $name = null, mixed $default = null)
+    {
+        if ($name !== null) {
+            return $this->get($name, $default, 'raw');
+        }
+
+        trigger_deprecation(
+            'joomla/input',
+            '__DEPLOY_VERSION__',
+            'Calling %s() without a name to get the request body is deprecated and will get an unfiltered value in 5.0.'
+            . ' Use %s::getRawBody() instead.',
+            __METHOD__,
+            self::class
+        );
+
+        return $this->raw;
+    }
+
+    /**
+     * Gets the raw JSON string from the request.
+     *
+     * @return  string|null  The raw JSON string from the request, or null if the data was passed to the constructor.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function getRawBody(): ?string
     {
         return $this->raw;
     }
