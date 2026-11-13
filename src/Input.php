@@ -53,6 +53,14 @@ class Input implements \Countable
     private const ALLOWED_GLOBALS = ['REQUEST', 'GET', 'POST', 'FILES', 'SERVER', 'ENV'];
 
     /**
+     * The Input subclasses available as magic properties, by lowercase property name
+     *
+     * @var    array<string, class-string<Input>>
+     * @since  __DEPLOY_VERSION__
+     */
+    private const INPUT_CLASSES = ['files' => Files::class, 'cookie' => Cookie::class, 'json' => Json::class];
+
+    /**
      * Options array for the Input instance.
      *
      * @var    array
@@ -103,6 +111,8 @@ class Input implements \Countable
     /**
      * Magic method to get an input object
      *
+     * The name is case-insensitive.
+     *
      * @param   mixed  $name  Name of the input object to retrieve.
      *
      * @return  Input  The request input object
@@ -112,27 +122,49 @@ class Input implements \Countable
      */
     public function __get($name)
     {
-        if (isset($this->inputs[$name])) {
-            return $this->inputs[$name];
+        $key = strtolower($name);
+
+        if (isset($this->inputs[$key])) {
+            return $this->inputs[$key];
         }
 
-        $className = __NAMESPACE__ . '\\' . ucfirst($name);
+        if (isset(self::INPUT_CLASSES[$key])) {
+            $className = self::INPUT_CLASSES[$key];
 
-        if (class_exists($className)) {
-            $this->inputs[$name] = new $className(null, $this->options);
+            $this->inputs[$key] = new $className(null, $this->options);
 
-            return $this->inputs[$name];
+            return $this->inputs[$key];
         }
 
         $superGlobal = '_' . strtoupper($name);
 
         if (\in_array(strtoupper($name), self::ALLOWED_GLOBALS, true) && isset($GLOBALS[$superGlobal])) {
-            $this->inputs[$name] = new self($GLOBALS[$superGlobal], $this->options);
+            $this->inputs[$key] = new self($GLOBALS[$superGlobal], $this->options);
 
-            return $this->inputs[$name];
+            return $this->inputs[$key];
         }
 
         throw new Exception('Undefined property via __get(): ' . $name);
+    }
+
+    /**
+     * Magic method to check whether an input object is available
+     *
+     * @param   mixed  $name  Name of the input object to check.
+     *
+     * @return  boolean
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    public function __isset($name)
+    {
+        $key = strtolower($name);
+
+        if (isset($this->inputs[$key]) || isset(self::INPUT_CLASSES[$key])) {
+            return true;
+        }
+
+        return \in_array(strtoupper($name), self::ALLOWED_GLOBALS, true) && isset($GLOBALS['_' . strtoupper($name)]);
     }
 
     /**

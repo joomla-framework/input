@@ -7,10 +7,13 @@
 
 namespace Joomla\Input\Tests;
 
+use Exception;
 use Joomla\Filter\InputFilter;
+use Joomla\Input\Files;
 use Joomla\Input\Input;
 use Joomla\Test\TestHelper;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Throwable;
@@ -145,6 +148,56 @@ class InputTest extends TestCase
         $instance = $this->getInputObject();
 
         $this->assertSame($instance->files, $instance->files, 'The same Files instance should be returned');
+    }
+
+    #[TestDox('Magic property names are case-insensitive')]
+    public function test__getIsCaseInsensitive(): void
+    {
+        $instance = $this->getInputObject();
+
+        $this->assertSame($instance->get, $instance->GET);
+        $this->assertSame($instance->files, $instance->Files);
+        $this->assertInstanceOf(Files::class, $instance->FILES);
+    }
+
+    #[TestDox('Magic properties do not query the autoloader')]
+    public function test__getDoesNotQueryTheAutoloader(): void
+    {
+        $requested = [];
+        $loader    = static function (string $class) use (&$requested): void {
+            $requested[] = $class;
+        };
+
+        spl_autoload_register($loader);
+
+        try {
+            $instance = $this->getInputObject();
+            $instance->get;
+            $instance->server;
+
+            try {
+                $instance->{'Foo\\Bar'};
+            } catch (Exception $e) {
+                // Expected, the property does not exist
+            }
+        } finally {
+            spl_autoload_unregister($loader);
+        }
+
+        $this->assertSame([], $requested);
+    }
+
+    #[TestDox('isset() reports the available magic properties')]
+    public function test__isset(): void
+    {
+        $instance = $this->getInputObject();
+
+        $this->assertTrue(isset($instance->get));
+        $this->assertTrue(isset($instance->POST));
+        $this->assertTrue(isset($instance->cookie));
+        $this->assertTrue(isset($instance->json));
+        $this->assertFalse(isset($instance->put));
+        $this->assertFalse(isset($instance->input));
     }
 
     /**

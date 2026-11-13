@@ -60,8 +60,8 @@ $input->files->get('upload');       // Joomla\Input\Files
 $input->json->getString('name');    // Joomla\Input\Json
 ```
 
-Note that `isset($input->post)` returns `false` — the class implements `__get()` but not
-`__isset()`.
+The property names are case-insensitive: `$input->GET` is the same object as `$input->get`, and
+`isset($input->post)` tells whether a property is available.
 
 ## Writing values
 
