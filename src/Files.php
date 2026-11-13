@@ -22,7 +22,7 @@ class Files extends Input
      * @var    array
      * @since  1.0
      */
-    protected $decodedData = [];
+    protected array $decodedData = [];
 
     /**
      * The class constructor.
@@ -32,7 +32,7 @@ class Files extends Input
      *
      * @since   1.0
      */
-    public function __construct($source = null, array $options = [])
+    public function __construct(?array $source = null, array $options = [])
     {
         $source = $source ?? $_FILES;
         parent::__construct($source, $options);
@@ -50,7 +50,7 @@ class Files extends Input
      * @see     \Joomla\Filter\InputFilter::clean()
      * @since   1.0
      */
-    public function get($name, $default = null, $filter = 'cmd')
+    public function get(string $name, mixed $default = null, $filter = 'cmd'): mixed
     {
         if (isset($this->data[$name])) {
             $results = $this->decodeData(
@@ -78,7 +78,7 @@ class Files extends Input
      *
      * @since   1.0
      */
-    protected function decodeData(array $data)
+    protected function decodeData(array $data): array
     {
         $result = [];
 
@@ -103,7 +103,7 @@ class Files extends Input
      *
      * @since   1.0
      */
-    public function set($name, $value)
+    public function set(string $name, mixed $value)
     {
         // Restricts the usage of parent's set method.
     }
