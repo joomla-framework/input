@@ -21,10 +21,10 @@ class Json extends Input
     /**
      * The raw JSON string from the request.
      *
-     * @var    string
+     * @var    string|null
      * @since  1.0
      */
-    private $raw;
+    private ?string $raw = null;
 
     /**
      * Constructor.
@@ -34,10 +34,10 @@ class Json extends Input
      *
      * @since   1.0
      */
-    public function __construct($source = null, array $options = [])
+    public function __construct(?array $source = null, array $options = [])
     {
         if ($source === null) {
-            $this->raw = file_get_contents('php://input');
+            $this->raw = (string) file_get_contents('php://input');
 
             // This is a workaround for where php://input has already been read.
             // See note under php://input on https://www.php.net/manual/en/wrappers.php.php
