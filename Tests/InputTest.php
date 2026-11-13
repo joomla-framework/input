@@ -11,6 +11,7 @@ use Joomla\Filter\InputFilter;
 use Joomla\Input\Input;
 use Joomla\Test\TestHelper;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Throwable;
@@ -303,6 +304,35 @@ class InputTest extends TestCase
         $input = $this->getInputObject($array);
 
         $this->assertEquals($input->getArray(), $array);
+    }
+
+    #[TestDox('Without a filter map, values are filtered as strings and not used as filter names')]
+    public function testGetArrayWithoutSpecifiedVariablesDoesNotUseValuesAsFilters(): void
+    {
+        $input = new Input(
+            [
+                'name'   => 'int',
+                'flag'   => 'bool',
+                'list'   => 'array',
+                'html'   => '<b>bold</b>',
+                'nested' => ['type' => 'float', 'deeper' => ['int', '<i>x</i>']],
+                'number' => 42,
+                'empty'  => null,
+            ]
+        );
+
+        $this->assertSame(
+            [
+                'name'   => 'int',
+                'flag'   => 'bool',
+                'list'   => 'array',
+                'html'   => 'bold',
+                'nested' => ['type' => 'float', 'deeper' => ['int', 'x']],
+                'number' => 42,
+                'empty'  => null,
+            ],
+            $input->getArray()
+        );
     }
 
     /**
