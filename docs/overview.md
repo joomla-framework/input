@@ -88,8 +88,9 @@ Called without arguments, `getArray()` returns everything — but be aware that 
 *value* as the filter name for its own key, which is not what the docblock describes. Pass an
 explicit map whenever the result matters.
 
-`getArray()` also assumes nested keys exist: `getArray(['a' => ['b' => 'int']], $source)` raises a
-warning and a `TypeError` if `$source['a']` is missing. Supply defaults or check first.
+Nested keys that are missing from the input come back as if their value were `null`, filtered
+with the requested filter: `getArray(['a' => ['b' => 'int']])` returns `['a' => ['b' => 0]]` when
+there is no `a` in the input. The value is never taken from another level of the input.
 
 ## Request method
 

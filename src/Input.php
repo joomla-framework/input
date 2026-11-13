@@ -193,9 +193,9 @@ class Input implements \Countable
         foreach ($vars as $k => $v) {
             if (\is_array($v)) {
                 if ($datasource === null) {
-                    $results[$k] = $this->getArray($v, $this->get($k, null, 'array'));
+                    $results[$k] = $this->getArray($v, $this->get($k, [], 'array'));
                 } else {
-                    $results[$k] = $this->getArray($v, $datasource[$k]);
+                    $results[$k] = $this->getArray($v, $datasource[$k] ?? []);
                 }
             } else {
                 if ($datasource === null) {
