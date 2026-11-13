@@ -2,6 +2,13 @@
 
 The following changes were made to the Input package between v4 and v5.
 
+## `Files::set()` and `Files::def()` throw
+
+Uploaded files are read-only. In v4, `Files::set()` silently did nothing and the inherited `def()`
+wrote into the data (later 4.x releases make both no-ops that trigger a deprecation). Both now throw a
+`LogicException`. Remove the calls; if you need to change the data in a test, construct a new
+`Files` object with the data instead.
+
 ## Native parameter, return and property types
 
 `Input`, `Cookie`, `Files` and `Json` now declare native types instead of relying on docblocks:

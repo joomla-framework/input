@@ -140,8 +140,8 @@ than PHP's column-wise structure.
 > path from `name` without sanitising it yourself, and never trust `type` — validate the real MIME
 > type with `finfo` instead.
 
-`Files::set()` is deliberately a no-op, but the inherited `def()` still writes, so file entries can
-be injected into the object.
+Uploaded files cannot be changed through the object: `Files::set()` and `Files::def()` throw a
+`LogicException`.
 
 ## JSON bodies
 

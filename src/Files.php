@@ -96,15 +96,36 @@ class Files extends Input
     /**
      * Sets a value.
      *
+     * Uploaded files cannot be changed.
+     *
      * @param   string  $name   The name of the input property to set.
      * @param   mixed   $value  The value to assign to the input property.
      *
      * @return  void
      *
+     * @throws  \LogicException  Always.
      * @since   1.0
      */
     public function set(string $name, mixed $value)
     {
-        // Restricts the usage of parent's set method.
+        throw new \LogicException(\sprintf('%s() is not supported, uploaded files cannot be changed.', __METHOD__));
+    }
+
+    /**
+     * Defines a value.
+     *
+     * Uploaded files cannot be changed.
+     *
+     * @param   string  $name   The name of the input property to define.
+     * @param   mixed   $value  The value to assign to the input property.
+     *
+     * @return  void
+     *
+     * @throws  \LogicException  Always.
+     * @since   __DEPLOY_VERSION__
+     */
+    public function def(string $name, mixed $value): void
+    {
+        throw new \LogicException(\sprintf('%s() is not supported, uploaded files cannot be changed.', __METHOD__));
     }
 }
