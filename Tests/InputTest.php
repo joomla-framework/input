@@ -11,6 +11,7 @@ use Joomla\Filter\InputFilter;
 use Joomla\Input\Input;
 use Joomla\Test\TestHelper;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Throwable;
@@ -278,6 +279,23 @@ class InputTest extends TestCase
                 ['var1' => 'string', 'var2' => 'int', 'var3' => 'array', 'var4' => ['var1' => ['var2' => 'array']]]
             )
         );
+    }
+
+    #[TestDox('A missing nested key is not read from the top level of the input')]
+    public function testGetArrayWithMissingNestedKey(): void
+    {
+        $input = new Input(['b' => '5', 'c' => 'top']);
+
+        $this->assertSame(['a' => ['b' => 0]], $input->getArray(['a' => ['b' => 'int']]));
+        $this->assertSame(['a' => ['b' => 0, 'c' => '']], $input->getArray(['a' => ['b' => 'int', 'c' => 'cmd']], ['x' => 1]));
+    }
+
+    #[TestDox('An empty nested filter map for a missing key does not return the whole input')]
+    public function testGetArrayWithMissingNestedKeyAndEmptyMap(): void
+    {
+        $input = new Input(['secret' => 'value']);
+
+        $this->assertSame(['a' => []], $input->getArray(['a' => []]));
     }
 
     /**
