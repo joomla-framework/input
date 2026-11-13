@@ -133,15 +133,29 @@ $file = $input->files->get('avatar');
 ```
 
 Multi-file inputs are pivoted, so `files->get('attachments')` returns a list of such arrays rather
-than PHP's column-wise structure.
+than PHP's column-wise structure. For directory uploads (`<input type="file" webkitdirectory>`),
+PHP also sends the relative path of each file; it is returned as `full_path` when present.
+
+A value that does not have the structure of a `$_FILES` entry — not an array, a missing `name`,
+`type`, `tmp_name`, `error` or `size`, or a mix of lists and single values — is treated as absent,
+so `get()` returns the default.
 
 > **The filter argument is ignored.** `Files::get()` accepts a third `$filter` parameter and never
-> applies it. The returned `name` and `type` are the raw, client-supplied values. Never build a
-> path from `name` without sanitising it yourself, and never trust `type` — validate the real MIME
-> type with `finfo` instead.
+> applies it. The returned `name`, `type` and `full_path` are the raw, client-supplied values.
+> Never build a path from `name` without cleaning it, and never trust `type` — validate the real
+> MIME type with `finfo` instead.
 
-`Files::set()` is deliberately a no-op, but the inherited `def()` still writes, so file entries can
-be injected into the object.
+`makeSafeFileName()` cleans a client-supplied file name for use in a path: it removes any directory
+part, every character other than letters, digits, `.`, `_`, `-` and space, sequences of dots and
+leading dots. The result may be empty.
+
+```php
+$file = $input->files->get('avatar');
+$name = $input->files->makeSafeFileName($file['name']);   // '../../a.php' → 'a.php'
+```
+
+Uploaded files cannot be changed through the object: `Files::set()` and `Files::def()` do nothing.
+Both are deprecated and will throw a `LogicException` in 5.0.
 
 ## JSON bodies
 
