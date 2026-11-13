@@ -154,9 +154,24 @@ $json->getString('title');
 $json->getRaw();              // the undecoded body
 ```
 
-The body is read and decoded on construction regardless of the request's `Content-Type`. A body
-that is not valid JSON yields an empty input rather than an error, so an API cannot distinguish
-"malformed JSON" from "no fields sent" — check `getRaw()` if that matters.
+The body is read and decoded on construction. A body that cannot be decoded yields an empty input;
+`hasError()` tells it apart from an empty body, and `getError()` returns the reason:
+
+```php
+$json = new Json();
+
+if ($json->hasError()) {
+    // e.g. 'Syntax error', or 'The request body is not a JSON object or array' for `42`
+    // answer with 400 Bad Request and $json->getError()
+}
+```
+
+An empty (or whitespace-only) body is not an error. A valid JSON scalar such as `42` or `null` is,
+because it has no fields to read.
+
+The body is decoded **regardless of the request's `Content-Type`**. A cross-site form can send a
+`text/plain` "simple" request whose body is JSON without a CORS preflight, so for endpoints
+authenticated by cookies, check that `Content-Type` is `application/json` before acting on the data.
 
 ## Not part of this package
 
