@@ -84,9 +84,9 @@ $data = $input->getArray([
 ]);
 ```
 
-Called without arguments, `getArray()` returns everything — but be aware that it then uses each
-*value* as the filter name for its own key, which is not what the docblock describes. Pass an
-explicit map whenever the result matters.
+Called without arguments, `getArray()` returns everything: strings — also inside nested arrays —
+are filtered with `string`, other values (integers, `null`, …) are returned unchanged. Pass an
+explicit map whenever you need a stricter filter.
 
 `getArray()` also assumes nested keys exist: `getArray(['a' => ['b' => 'int']], $source)` raises a
 warning and a `TypeError` if `$source['a']` is missing. Supply defaults or check first.

@@ -175,7 +175,8 @@ class Input implements \Countable
      *
      * @param   array  $vars        Associative array of keys and filter types to apply.
      *                              If empty and datasource is null, all the input data will be returned
-     *                              but filtered using the default case in InputFilter::clean.
+     *                              with every string filtered as 'string' (the default case in
+     *                              InputFilter::clean); other scalar values are returned unchanged.
      * @param   mixed  $datasource  Array to retrieve data from, or null
      *
      * @return  mixed  The filtered input data.
@@ -185,7 +186,7 @@ class Input implements \Countable
     public function getArray(array $vars = [], $datasource = null)
     {
         if (empty($vars) && $datasource === null) {
-            $vars = $this->data;
+            return $this->cleanAll($this->data);
         }
 
         $results = [];
@@ -209,6 +210,32 @@ class Input implements \Countable
         }
 
         return $results;
+    }
+
+    /**
+     * Filters all strings in a value with the 'string' filter, recursing into arrays.
+     *
+     * @param   mixed  $value  The value to filter.
+     *
+     * @return  mixed  The filtered value.
+     *
+     * @since   __DEPLOY_VERSION__
+     */
+    private function cleanAll(mixed $value): mixed
+    {
+        if (\is_array($value)) {
+            foreach ($value as $key => $item) {
+                $value[$key] = $this->cleanAll($item);
+            }
+
+            return $value;
+        }
+
+        if (\is_string($value)) {
+            return $this->filter->clean($value, 'string');
+        }
+
+        return $value;
     }
 
     /**
